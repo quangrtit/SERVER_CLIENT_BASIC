@@ -1,0 +1,16 @@
+select database1.groupx.group_name from database1.groupx
+join database1.users_groupx on database1.groupx.group_id = database1.users_groupx.group_id
+join database1.users on database1.users_groupx.user_idphone = database1.users.user_idphone
+where 1 > 0
+// join in some table relationship many and many
+SELECT * FROM database1.groupx ORDER BY group_id DESC LIMIT 1; // select last record using id 
+
+CREATE TABLE database1.chatHistory (
+	chat_id BIGSERIAL PRIMARY KEY,
+	group_id BIGINT NOT NULL,
+	user_idphone VARCHAR(105) NOT NULL,
+	chat_message VARCHAR(105),
+	chat_time VARCHAR(105) NOT NULL,
+	FOREIGN KEY (group_id) REFERENCES database1.groupx(group_id),
+	FOREIGN KEY (user_idphone) REFERENCES database1.users(user_idphone)
+)

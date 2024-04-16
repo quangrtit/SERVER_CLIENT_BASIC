@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "qqmlapplicationengine": "cpp",
+        "functional": "cpp",
+        "*.tcc": "cpp",
+        "string": "cpp"
+    }
+}
