@@ -1,5 +1,5 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource prefix="/casino">
-<file alias="main.qml">D:/ZALO_SERVER/server/main.qml</file>
+<file alias="main.qml">D:/ALLZALO/ZALO_SERVER/server/main.qml</file>
 </qresource>
 </RCC>

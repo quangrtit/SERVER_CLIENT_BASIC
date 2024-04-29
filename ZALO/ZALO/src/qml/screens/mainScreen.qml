@@ -12,6 +12,7 @@ Rectangle {
     signal changeScreen(string source, string username)
     property var nameGroup: "not know" 
     property var st: 1
+    property var takeIndex: -1
     Row {
         anchors.fill: parent
         Rectangle {
@@ -403,7 +404,7 @@ Rectangle {
                                         radius: 180
                                         border.width: 2
                                         border.color: "lightblue"
-                                        color: rectUser.color
+                                        color: listUsers.get(index).colors
                                     }
                                     Rectangle {
                                         width: parent.width - 2 * parent.height - 20
@@ -457,7 +458,12 @@ Rectangle {
                                 onExited: {
                                     rectUser.color = "white"
                                 }
-                                onClicked: {
+                                onClicked: { 
+                                    for(var i = 0; i < listUsers.count; i++)
+                                    {
+                                        listUsers.setProperty(i, "colors", "white");
+                                    }
+                                    listUsers.setProperty(index, "colors", "#E0E0E0");
                                     group_now = listUsers.get(index).id
                                     nameGroup = listUsers.get(index).name
                                     user.reloadRoomChat(userphonePlayer, group_now)
@@ -645,6 +651,7 @@ Rectangle {
         //     name: "QUANG"
         //     lastText: "not have"
         //     timeLastText: "not have"
+        //     colors: "white"
         // }
     }
     Connections {
@@ -662,7 +669,8 @@ Rectangle {
                         "code": jsonData["userphoneFriend"].toString(),
                         "name": jsonData["userphoneFriend"].toString(),
                         "lastText": "",
-                        "timeLastText": ""
+                        "timeLastText": "",
+                        "colors": "white"
                     })
                 }
                 else if(userphonePlayer == jsonData["userphoneFriend"].toString())
@@ -672,13 +680,14 @@ Rectangle {
                         "code": jsonData["userphone"].toString(),
                         "name": jsonData["userphone"].toString(),
                         "lastText": "",
-                        "timeLastText": ""
+                        "timeLastText": "",
+                        "colors": "white"
                     })
                 }
             }
-            else if(type = "startChat")
+            else if(type == "startChat")
             {
-                var arrGroupReceived = jsonData["arrGroup_id"]
+                var arrGroupReceived = jsonData["arrGroup_id"];
                 for(var i = 0; i < arrGroupReceived.length; i++)
                 {
                     if(jsonData[arrGroupReceived[i].toString()].length == 2)
@@ -697,7 +706,8 @@ Rectangle {
                             "code": nameFriend,
                             "name": nameFriend,
                             "lastText": "",
-                            "timeLastText": ""
+                            "timeLastText": "",
+                            "colors": "white"
                         })
                     }
                     

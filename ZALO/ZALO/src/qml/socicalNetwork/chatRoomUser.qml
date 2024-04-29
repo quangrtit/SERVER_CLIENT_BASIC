@@ -205,85 +205,53 @@ Rectangle {
                     ListView {
                         id: listDataChat
                         width: parent.width - 20
-                        height: parent.height - 20
+                        height: parent.height - 40
                         anchors.centerIn: parent
                         contentWidth: width
                         contentHeight: height
                         ScrollBar.vertical: ScrollBar {
                             policy: ScrollBar.AsNeeded
                         }
-                        // signal scrollToBottom
-                        // Connections {
-                        //     target: listDataChat
-
-                        //     function onScrollToBottom() {
-                        //         // Đặt giá trị contentY là đủ lớn để cuộn về cuối cùng
-                        //         listDataChat.contentY = listDataChat.contentHeight - listDataChat.height - 20
-                        //     }
-                        // }
                         boundsBehavior: Flickable.StopAtBounds
                         model: listDataChatRealTime
-                        spacing: 10
-                        clip: true
-                        delegate: Rectangle {
-                            width: listDataChat.width / 2 
-                            height: listDataChat.height / 12
-                            color: "lightgray"
-                            x: listDataChatRealTime.get(index)?.objects === "me" ? listDataChat.width / 2 : 0
-                            Rectangle {
-                                id: rectAvatarFriend
-                                width: parent.height 
-                                height: parent.height
-                                visible: listDataChatRealTime.count > 0 ? (listDataChatRealTime.get(index)?.checkAvatar === 0 ? false : true) : false
-                                radius: 180
-                                color: "lightblue"
+                        spacing: 30
+                        //clip: true
+                        delegate: chatHistoryDelegate
+                    }
+                    Component {
+                        id: chatHistoryDelegate
+                        Rectangle{
+                            id: rectMess
+                            height: messageText.implicitHeight + 24
+                            width: messageText.implicitWidth + 24
+                            // color: "blue"
+                            color: objects === "me" ? "blue" : "silver"
+                            x: objects == "me" ? listDataChat.width - width : 0
+                            radius: 5
+                            Text {
+                                id: messageText
+                                text: message
+                                anchors.fill: parent
+                                anchors.margins: 12
+                                color: objects === "me" ? "white" : "black"
+                                opacity: 0.8
+                                font.pixelSize: 13
+                                font.family: "Helvetica"
+                                verticalAlignment: Qt.AlignVCenter
+                                horizontalAlignment: objects === "me" ? Qt.AlignLeft : Qt.AlignRight
+                            }
+                            Text {
+                                text: name
+                                font.pixelSize: 10
+                                color: "#606060"
+                                x: 13
+                                y: rectMess.height
                                 // Component.onCompleted: {
-                                //     console.log(rectAvatarFriend.x, " " , listDataChatRealTime.get(index).checkAvatar)
+                                //     console.log("this is: ", name, " ", x, " ", y)
                                 // }
-                                //anchors.left: parent.left
-                            }
-                            Rectangle {
-                                visible: listDataChatRealTime.count > 0 ? (listDataChatRealTime.get(index)?.objects !== "me" ? true : false) : false
-                                x: rectAvatarFriend.x + rectAvatarFriend.width + 20
-                                implicitHeight: textMessage.height * 2
-                                implicitWidth: textMessage.width + 10
-                                color: "white"
-                                radius: 10
-                                Text {
-                                    id: textMessage
-                                    text: listDataChatRealTime.get(index).message
-                                    //width: listDataChatRealTime.get(index).message > 50 ? listDataChat.width / 2 : undefined 
-                                    font.bold: true
-                                    font.pointSize: 10
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    //wrapMode: listDataChatRealTime.get(index).message > 50 ? Text.WrapAnywhere : Text.NoWrap
-                                }
-                            }
-                            Rectangle {
-                                visible: listDataChatRealTime.count > 0 ? (listDataChatRealTime.get(index)?.objects === "me" ? true : false) : false
-                                anchors.right: parent.right
-                                implicitHeight: textMessage1.height * 2
-                                implicitWidth: textMessage1.width + 10
-                                radius: 5
-                                color: "lightblue"
-                                Text {
-                                    id: textMessage1
-                                    text: listDataChatRealTime.get(index)?.message
-                                    //width: listDataChatRealTime.get(index).message > 50 ? listDataChat.width / 2 : undefined 
-                                    font.bold: true
-                                    font.pointSize: 10
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    //wrapMode: listDataChatRealTime.get(index).message > 50 ? Text.WrapAnywhere : Text.NoWrap
-                                }
                             }
                         }
-                        // onContentHeightChanged: {
-                        //     if(stx !== 0)
-                        //     {
-                        //         listDataChat.contentY = listDataChat.contentHeight
-                        //         stx++;
-                        //     }
-                        // }
+                        
                     }
                     Canvas{
                         anchors.fill: parent
@@ -380,22 +348,40 @@ Rectangle {
                     Column {
                         anchors.fill: parent
                         Rectangle {
-                            width: parent.width - 20
+                            width: parent.width
                             height: parent.height - 35
-                            // anchors.centerIn: parent
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            clip: true
-                            TextArea {
-                                id: chatNow
-                                width: parent.width
-                                placeholderText: "@, Message...."
-                                font.pointSize: 11
-                                color: "black"
-                                wrapMode: TextArea.Wrap
-                                onContentHeightChanged: {
+                            ScrollView {
+                                anchors.fill: parent
+                                clip: true
+                                TextArea {
+                                    id: chatNow
+                                    width: parent.width
+                                    height: parent.height
                                     
+                                    verticalAlignment: Qt.AlignVCenter
+                                    placeholderText: qsTr("Type Message...")
+                                    font.family: "Heltiveca"
+                                    font.pointSize: 10
+                                    wrapMode: TextArea.Wrap
+                                    background: Rectangle {
+                                        width: parent.width
+                                        height: parent.height
+                                        color: "silver"
+                                        //radius: 15
+                                    }
                                 }
                             }
+                            // TextArea {
+                            //     id: chatNow
+                            //     width: parent.width
+                            //     placeholderText: qsTr("Type Message...")
+                            //     font.pointSize: 11
+                            //     color: "black"
+                            //     wrapMode: TextArea.Wrap
+                            //     onContentHeightChanged: {
+                                    
+                            //     }
+                            // }
                             
                         }
                         Rectangle {
@@ -459,6 +445,7 @@ Rectangle {
                                                 {
                                                     user.sendMessage(userphonePlayer, group_now, chatNow.text)
                                                     listDataChatRealTime.append({
+                                                        "name": userphonePlayer,
                                                         "objects": "me",
                                                         "message": chatNow.text,
                                                         "time": "10.20",
@@ -714,56 +701,6 @@ Rectangle {
         //     checkAvatar: 0
         //     moreInfo: "" 
         // }
-        // ListElement {
-        //     objects: "me"
-        //     message: "hello world"
-        //     time: "10:20"
-        //     w: 0
-        //     h: 0
-        //     x: 0
-        //     checkAvatar: 0
-        //     moreInfo: "" 
-        // }
-        // ListElement {
-        //     objects: "friend"
-        //     message: "hello world"
-        //     time: "10:20"
-        //     w: 0
-        //     h: 0
-        //     x: 0
-            
-        //     moreInfo: "" 
-        // }
-        // ListElement {
-        //     objects: "me"
-        //     message: "hello worldcscccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
-        //     time: "10:20"
-        //     w: 0
-        //     h: 0
-        //     x: 0
-        //     checkAvatar: 0
-        //     moreInfo: "" 
-        // }
-        // ListElement {
-        //     objects: "friend"
-        //     message: "hello world"
-        //     time: "10:20"
-        //     w: 0
-        //     h: 0
-        //     x: 0
-        //     checkAvatar: 0
-        //     moreInfo: "" 
-        // }
-        // ListElement {
-        //     objects: "friend"
-        //     message: "hello worldccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
-        //     time: "10:20"
-        //     w: 0
-        //     h: 0
-        //     x: 0
-        //     checkAvatar: 0
-        //     moreInfo: "" 
-        // }
     }
     Connections {
         target: user
@@ -779,6 +716,7 @@ Rectangle {
                 for(var i = 0; i < arr1.length; i++)
                 {
                     listDataChatRealTime.append({
+                        "name": arr2[i],
                         "objects": arr2[i] === userphonePlayer ? "me" : "friend",
                         "message": arr1[i],
                         "time": "0000",
@@ -794,6 +732,7 @@ Rectangle {
             else if(jsonData["type"] === "chat" && userphonePlayer !== jsonData["userphoneSender"] && group_now === jsonData["group_id"])
             {
                 listDataChatRealTime.append({
+                    "name": jsonData["userphoneSender"].toString(),
                     "objects": "friend",
                     "message": jsonData["message"].toString(),
                     "time": "0000",

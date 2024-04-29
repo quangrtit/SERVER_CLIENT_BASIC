@@ -427,6 +427,7 @@ void Server::getAllGroupChatForUser(QString userphone, QJsonObject& jsonF)
     {
         qDebug() << "connect not success";
     }
+    //qDebug() << "data is: " << jsonF;
 }
 void Server::sendMessageForGroup(QString userphone, QString group_id, QString message)
 {
