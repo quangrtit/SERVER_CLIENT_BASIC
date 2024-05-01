@@ -32,6 +32,8 @@ public:
     void sendMessageForGroup(QString userphone, QString group_id, QString message);
     void getAllGroupChatForUser(QString userphone, QJsonObject& jsonF);
     void getAllMessage(QString userphone, QString group_id, QJsonObject& jsonF);
+    bool checkInfoRegister(QString userphone, QString password, QJsonObject& jsonF);
+    void registerAccount(QString userphone, QString password, QJsonObject& jsonF);
 private:
     QTcpServer server;
     QHash<QString, QTcpSocket*> _clients;// list save all clients

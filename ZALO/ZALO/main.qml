@@ -30,16 +30,17 @@ Window {
     Connections {
         target: loader_screen.item
         function onChangeScreen(source, username) {
-            if(username !== "") userphonePlayer = username; // đặt tiền lấy từ db
-            if (source && source != "") {
-                //if(source == "qrc:/zalo/src/qml/screens/mainScreen.qml") user.sendInfoStartRoomChat(userphonePlayer)
-                loader_screen.source = source
-            }
-            else 
-            {
-                loader_screen.source = "";
-                loader_screen.source = "qrc:/zalo/src/qml/screens/login.qml"
-            }
+            if(username !== "") userphonePlayer = username; // đặt sdt lấy từ db
+            loader_screen.source = source
+            // if (source) {
+            //     //if(source == "qrc:/zalo/src/qml/screens/mainScreen.qml") user.sendInfoStartRoomChat(userphonePlayer)
+            //     loader_screen.source = source
+            // }
+            // else 
+            // {
+            //     //loader_screen.source = "";
+            //     loader_screen.source = "qrc:/zalo/src/qml/screens/login.qml"
+            // }
         }
     }
 }

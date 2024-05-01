@@ -162,7 +162,8 @@ Rectangle {
                         onClicked: {
                             // exit
                             user.sendInfoLogoffToServer(userphonePlayer)
-                            changeScreen("", "");
+                            //changeScreen("", "");
+                            changeScreen("qrc:/zalo/src/qml/screens/login.qml", "");
                         }
                     }
                 }

@@ -59,11 +59,13 @@ static constexpr auto qt_meta_stringdata_CLASSUserENDCLASS = QtMocHelpers::strin
     "sendMessage",
     "group_id",
     "message",
-    "reloadRoomChat"
+    "reloadRoomChat",
+    "sendInfoRegister",
+    "passwordAgain"
 );
 #else  // !QT_MOC_HAS_STRING_DATA
 struct qt_meta_stringdata_CLASSUserENDCLASS_t {
-    uint offsetsAndSizes[44];
+    uint offsetsAndSizes[48];
     char stringdata0[5];
     char stringdata1[13];
     char stringdata2[1];
@@ -86,6 +88,8 @@ struct qt_meta_stringdata_CLASSUserENDCLASS_t {
     char stringdata19[9];
     char stringdata20[8];
     char stringdata21[15];
+    char stringdata22[17];
+    char stringdata23[14];
 };
 #define QT_MOC_LITERAL(ofs, len) \
     uint(sizeof(qt_meta_stringdata_CLASSUserENDCLASS_t::offsetsAndSizes) + ofs), len 
@@ -112,7 +116,9 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASSUserENDCLASS_t qt_meta_stringda
         QT_MOC_LITERAL(223, 11),  // "sendMessage"
         QT_MOC_LITERAL(235, 8),  // "group_id"
         QT_MOC_LITERAL(244, 7),  // "message"
-        QT_MOC_LITERAL(252, 14)   // "reloadRoomChat"
+        QT_MOC_LITERAL(252, 14),  // "reloadRoomChat"
+        QT_MOC_LITERAL(267, 16),  // "sendInfoRegister"
+        QT_MOC_LITERAL(284, 13)   // "passwordAgain"
     },
     "User",
     "dataReceived",
@@ -135,7 +141,9 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASSUserENDCLASS_t qt_meta_stringda
     "sendMessage",
     "group_id",
     "message",
-    "reloadRoomChat"
+    "reloadRoomChat",
+    "sendInfoRegister",
+    "passwordAgain"
 };
 #undef QT_MOC_LITERAL
 #endif // !QT_MOC_HAS_STRING_DATA
@@ -147,7 +155,7 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSUserENDCLASS[] = {
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-      11,   14, // methods
+      12,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -155,21 +163,22 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSUserENDCLASS[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    1,   80,    2, 0x06,    1 /* Public */,
+       1,    1,   86,    2, 0x06,    1 /* Public */,
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       4,    2,   83,    2, 0x0a,    3 /* Public */,
-       7,    0,   88,    2, 0x0a,    6 /* Public */,
-       8,    0,   89,    2, 0x0a,    7 /* Public */,
-       9,    0,   90,    2, 0x0a,    8 /* Public */,
+       4,    2,   89,    2, 0x0a,    3 /* Public */,
+       7,    0,   94,    2, 0x0a,    6 /* Public */,
+       8,    0,   95,    2, 0x0a,    7 /* Public */,
+       9,    0,   96,    2, 0x0a,    8 /* Public */,
 
  // methods: name, argc, parameters, tag, flags, initial metatype offsets
-      10,    2,   91,    2, 0x02,    9 /* Public */,
-      13,    1,   96,    2, 0x02,   12 /* Public */,
-      14,    2,   99,    2, 0x02,   14 /* Public */,
-      17,    1,  104,    2, 0x02,   17 /* Public */,
-      18,    3,  107,    2, 0x02,   19 /* Public */,
-      21,    2,  114,    2, 0x02,   23 /* Public */,
+      10,    2,   97,    2, 0x02,    9 /* Public */,
+      13,    1,  102,    2, 0x02,   12 /* Public */,
+      14,    2,  105,    2, 0x02,   14 /* Public */,
+      17,    1,  110,    2, 0x02,   17 /* Public */,
+      18,    3,  113,    2, 0x02,   19 /* Public */,
+      21,    2,  120,    2, 0x02,   23 /* Public */,
+      22,    3,  125,    2, 0x02,   26 /* Public */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::QString,    3,
@@ -187,6 +196,7 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSUserENDCLASS[] = {
     QMetaType::Void, QMetaType::QString,   16,
     QMetaType::Void, QMetaType::QString, QMetaType::QString, QMetaType::QString,   11,   19,   20,
     QMetaType::Void, QMetaType::QString, QMetaType::QString,   11,   19,
+    QMetaType::Void, QMetaType::QString, QMetaType::QString, QMetaType::QString,   11,   12,   23,
 
        0        // eod
 };
@@ -235,6 +245,11 @@ Q_CONSTINIT const QMetaObject User::staticMetaObject = { {
         // method 'reloadRoomChat'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         QtPrivate::TypeAndForceComplete<QString, std::false_type>,
+        QtPrivate::TypeAndForceComplete<QString, std::false_type>,
+        // method 'sendInfoRegister'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<QString, std::false_type>,
+        QtPrivate::TypeAndForceComplete<QString, std::false_type>,
         QtPrivate::TypeAndForceComplete<QString, std::false_type>
     >,
     nullptr
@@ -257,6 +272,7 @@ void User::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void *
         case 8: _t->sendInfoStartRoomChat((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
         case 9: _t->sendMessage((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3]))); break;
         case 10: _t->reloadRoomChat((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
+        case 11: _t->sendInfoRegister((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -290,13 +306,13 @@ int User::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 11)
+        if (_id < 12)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 11;
+        _id -= 12;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 11)
+        if (_id < 12)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 11;
+        _id -= 12;
     }
     return _id;
 }

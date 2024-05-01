@@ -131,6 +131,7 @@ debug/qrc_qmake_resources.cpp: debug/qmake_resources.qrc \
 		images/close.png \
 		images/attachFile.png \
 		src/qml/socicalNetwork/chatRoomUser.qml \
+		src/qml/screens/register.qml \
 		src/qml/screens/login.qml \
 		src/qml/screens/login.qml \
 		src/qml/screens/mainScreen.qml

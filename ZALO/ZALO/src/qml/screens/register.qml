@@ -210,9 +210,75 @@ Rectangle {
                         Layout.fillHeight: true
                     }
                 }
+                RowLayout {                    
+                    Layout.fillWidth: true
+                    Layout.fillHeight: false
+                    Layout.preferredHeight: 40
+                    Text {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Layout.preferredWidth: 1
+                        text: "Password \n   again"
+                        font.pixelSize: 18
+                        color: "black"
+                        verticalAlignment: Text.AlignVCenter
+                        leftPadding: 15
+                    }
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Layout.preferredWidth: 2
+                        color: "transparent"
+                        border {
+                            width: 1
+                            color: "black"
+                        }
+                        radius: 10
+                        RowLayout {
+                            anchors.fill: parent
+                            Item {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: false
+                                Layout.preferredWidth: parent.height
+                                // source: "qrc:/advanced/images/search.png"
+                                // fillMode: Image.PreserveAspectFit        
+                            }
+                            TextField {
+                                id: passwordTextAgain
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                placeholderText: "Fill password again"
+                                placeholderTextColor: "black"                                
+                                font.pixelSize: 15
+                                color: "black"
+                                echoMode: TextInput.Password
+                                background: Rectangle {
+                                    anchors.fill: parent
+                                    color: "transparent"
+                                }
+                                onFocusChanged: {
+                                    if (this.focus) {
+                                        this.placeholderText = ""
+                                    } else if (this.text === "") {
+                                        this.placeholderText = "Fill password again"
+                                    }
+                                }
+                                Keys.onReturnPressed: {
+                                    login_btn.clicked();
+                                }
+                            }
+                        }
+                    }
+                    Item {
+                        Layout.fillWidth: true
+                        Layout.preferredWidth: 1
+                        Layout.fillHeight: true
+                    }
+                }
                 RowLayout {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
+                    Layout.preferredHeight: 60
                     Item {
                         Layout.fillWidth: true
                         Layout.preferredWidth: 1
@@ -236,8 +302,10 @@ Rectangle {
                             onClicked: {
                                 if(checked) {
                                     passwordText.echoMode = TextInput.Normal
+                                    passwordTextAgain.echoMode = TextInput.Normal
                                 } else {
                                     passwordText.echoMode = TextInput.Password
+                                    passwordTextAgain.echoMode = TextInput.Password
                                 }
                             }
                             MouseArea{
@@ -251,12 +319,11 @@ Rectangle {
                         }
                         Text{
                             id: loginNotification
-                            text: "Username or password is incorrect"
+                            text: "";
                             color: "red"
                             visible: false
                             font.pointSize: 10
                             font.italic: true
-                            //anchors.verticalCenter: parent.verticalCenter
                             anchors.bottom: parent.bottom
                         }
                     }
@@ -268,7 +335,7 @@ Rectangle {
                 }
                 RowLayout {
                     Layout.fillWidth: true
-                    Layout.fillHeight: false
+                    Layout.fillHeight: true
                     Layout.preferredHeight: 120
                     Item {
                         Layout.fillWidth: true
@@ -296,41 +363,24 @@ Rectangle {
                                 }
 
                                 contentItem: Text {
-                                    text: "Login"
+                                    text: "Cancel"
                                     horizontalAlignment: Text.AlignHCenter
                                     verticalAlignment: Text.AlignVCenter
                                     font.pixelSize: 18
                                     font.bold: true
                                     color: "black"
                                 }
-                                Connections {
-                                    target: user
-                                    function onDataReceived(data)
-                                    {
-                                        var jsonData = JSON.parse(data)
-                                        var type = jsonData.type
-                                        if(type === "login")
-                                        {
-                                            if(jsonData.result == "accept")
-                                            {
-                                                loginNotification.visible = false
-                                                // cần kiểm tra tên user => set trạng thái
-                                                changeScreen("qrc:/zalo/src/qml/screens/mainScreen.qml", user_name_input.text);
-                                            }
-                                            else 
-                                            {
-                                                loginNotification.visible = true
-                                                // //
-                                                // loginNotification.visible = false
-                                                // // cần kiểm tra tên user => set trạng thái
-                                                // changeScreen("qrc:/zalo/src/qml/mainScreen.qml", user_name_input.text);
-                                                // // 
-                                            }
-                                        }
-                                    }
-                                }
+                                // Connections {
+                                //     target: user
+                                //     function onDataReceived(data)
+                                //     {
+                                //         var jsonData = JSON.parse(data)
+                                //         var type = jsonData.type
+                                        
+                                //     }
+                                // }
                                 onClicked: {
-                                    user.sendInfoLoginToServer(user_name_input.text,passwordText.text)
+                                    changeScreen("qrc:/zalo/src/qml/screens/login.qml", "")
                                 }
                                 MouseArea{
                                     anchors.fill: parent
@@ -365,12 +415,22 @@ Rectangle {
                                     {
                                         var jsonData = JSON.parse(data)
                                         var type = jsonData.type
-                                        
+                                        if(type === "register")
+                                        {
+                                            loginNotification.text = jsonData["result"].toString()
+                                            loginNotification.visible = true
+                                            if(loginNotification.text === "success created account")
+                                            {
+                                                delayTimer.start()
+                                            }
+                                            //     // cần kiểm tra tên user => set trạng thái
+                                            // changeScreen("qrc:/zalo/src/qml/screens/login.qml", "")
+                                        }
+                                        console.log("new is: ", data)
                                     }
                                 }
                                 onClicked: {
-                                    // user.sendInfoLoginToServer(user_name_input.text,passwordText.text)
-                                    changeScreen("qrc:/zalo/src/qml/screens/register.qml", "")
+                                    user.sendInfoRegister(user_name_input.text, passwordText.text, passwordTextAgain.text)
                                 }
                                 MouseArea{
                                     anchors.fill: parent
@@ -398,4 +458,14 @@ Rectangle {
             color: "transparent"            
         }
     }    
+    Timer {
+        id: delayTimer
+        interval: 2000
+        running: false
+        repeat: false
+        onTriggered: {
+            delayTimer.stop()
+            changeScreen("qrc:/zalo/src/qml/screens/login.qml", "")
+        }
+    }
 }

@@ -19,6 +19,7 @@ public:
     Q_INVOKABLE void sendInfoStartRoomChat(QString userphoneSender);
     Q_INVOKABLE void sendMessage(QString userphone, QString group_id, QString message);
     Q_INVOKABLE void reloadRoomChat(QString userphone, QString group_id);
+    Q_INVOKABLE void sendInfoRegister(QString userphone, QString password, QString passwordAgain);
 signals:
     void dataReceived(QString data);
 public slots: 

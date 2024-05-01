@@ -5,6 +5,7 @@
 <file alias="src/qml/screens/mainScreen.qml">D:/ALLZALO/ZALO/ZALO/src/qml/screens/mainScreen.qml</file>
 <file alias="src/qml/socicalNetwork/chatRoomUser.qml">D:/ALLZALO/ZALO/ZALO/src/qml/socicalNetwork/chatRoomUser.qml</file>
 <file alias="src/qml/screens/login.qml">D:/ALLZALO/ZALO/ZALO/src/qml/screens/login.qml</file>
+<file alias="src/qml/screens/register.qml">D:/ALLZALO/ZALO/ZALO/src/qml/screens/register.qml</file>
 <file alias="images/symbolChat2.png">D:/ALLZALO/ZALO/ZALO/images/symbolChat2.png</file>
 <file alias="images/contacts.jpg">D:/ALLZALO/ZALO/ZALO/images/contacts.jpg</file>
 <file alias="images/st.png">D:/ALLZALO/ZALO/ZALO/images/st.png</file>

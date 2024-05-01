@@ -105,6 +105,24 @@ void Server::onReadData() // processing
             QByteArray jsonData = jsonDoc1.toJson();
             emit dataReceived(jsonData);
         }
+        else if(type == "register")
+        {
+            QJsonObject json1;
+            json1["sender"] = this->getClientKey(client);
+            json1["type"] = "register";
+            json1["userphoneSender"] = json["userphoneSender"].toString();
+            if(json["password"].toString() == json["passwordAgain"].toString()) {
+                this->registerAccount(json["userphoneSender"].toString(), json["password"].toString(), json1);
+            }
+            else 
+            {
+                json1["result"] = "not success created account because password again != password";
+            }
+            QJsonDocument jsonDoc1(json1);
+            QByteArray jsonData = jsonDoc1.toJson();
+            emit dataReceived(jsonData);
+            qDebug() << "this is: " << json1; 
+        }
     }
 }
 void Server::onClientDisconnected()
@@ -163,7 +181,7 @@ void Server::onNewMessage(QByteArray ba)
         }
         else if(type == "chat")
         {
-            qDebug() << "demo: " << ba;
+            // qDebug() << "demo: " << ba;
             for(auto &client: _clients)
             {
                 client->write(ba);
@@ -171,15 +189,22 @@ void Server::onNewMessage(QByteArray ba)
                 client->flush();
             }
         }
+        else if(type == "register")
+        {
+            _clients[json["sender"].toString()]->write(ba);
+            _clients[json["sender"].toString()]->waitForBytesWritten();
+            _clients[json["sender"].toString()]->flush();
+            // send result for sender about status log 
+        }
         return;
     }
     // send data for all clients 
-    for(auto &client: _clients)
-    {
-        client->write(ba);
-        client->waitForBytesWritten();
-        client->flush();
-    }
+    // for(auto &client: _clients)
+    // {
+    //     client->write(ba);
+    //     client->waitForBytesWritten();
+    //     client->flush();
+    // }
 }
 QString Server::accessSuccess(QString userphone, QString password)
 {
@@ -481,6 +506,57 @@ void Server::getAllMessage(QString userphone, QString group_id, QJsonObject& jso
     {
         qDebug() << "connect not success";
     }
+}
+bool Server::checkInfoRegister(QString userphone, QString password, QJsonObject& jsonF)
+{
+    // check size: maxsize(userphone) = 20, maxsize(password) = 20
+    if(userphone.size() > 20 || password.size() > 20 || userphone.size() < 6 || password.size() < 6) 
+    {
+        jsonF["result"] = "Incorrect because userphone or password have length >=6 and length <= 20";
+        return false;
+    }
+    for(int i = 0; i < userphone.size(); i++)
+    {
+        if(!userphone[i].isDigit())
+        {
+            jsonF["result"] = "Userphone is incorrect because userphone only have digit";
+            return false;
+        }
+    }
+    return true;
+}
+void Server::registerAccount(QString userphone, QString password, QJsonObject& jsonF)
+{
+    if(!checkInfoRegister(userphone, password, jsonF))
+    {
+        return;
+    }
+    QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
+    db.setHostName("localhost");
+    db.setPort(5432);
+    db.setDatabaseName("networking");
+    db.setUserName("postgres");
+    db.setPassword("123456");
+    if(db.open())
+    {
+        QSqlQuery getDb;
+        QString qr = "insert into database1.users(user_idphone, user_name, user_password, statuslogin) values('" + userphone + "', '', '" + password + "', '0')";
+        if(getDb.exec(qr))
+        {
+            jsonF["result"] = "success created account";
+            return;
+            qDebug() << "new account created success";
+        }
+        else 
+        {
+            qDebug() << "not created account";
+        }
+    }
+    else 
+    {
+        qDebug() << "connect not success";
+    }
+    jsonF["result"] = "not success created account";
 }
 QString Server::getClientKey(QTcpSocket *client)
 {

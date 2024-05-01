@@ -107,3 +107,17 @@ void User::reloadRoomChat(QString userphone, QString group_id)
     client.waitForBytesWritten();
     client.flush();
 }
+void User::sendInfoRegister(QString userphone, QString password, QString passwordAgain)
+{
+    if(client.state() == QAbstractSocket::UnconnectedState) client.connectToHost("localhost", 1234);
+    QJsonObject json;
+    json["type"] = "register";
+    json["userphoneSender"] = userphone;
+    json["password"] = password;
+    json["passwordAgain"] = passwordAgain;
+    QJsonDocument jsonDoc(json);
+    QByteArray jsonData = jsonDoc.toJson();
+    client.write(jsonData);
+    client.waitForBytesWritten();
+    client.flush();
+}

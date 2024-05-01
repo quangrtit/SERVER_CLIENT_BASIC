@@ -19,7 +19,8 @@ resources.files += \
 resources.files += src/qml/screens/login.qml \
                         src/qml/screens/mainScreen.qml \
                         src/qml/socicalNetwork/chatRoomUser.qml \
-                        src/qml/screens/login.qml
+                        src/qml/screens/login.qml \
+                        src/qml/screens/register.qml
 
 resources.files += \
                 images/symbolChat2.png \
