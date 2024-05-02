@@ -85,6 +85,7 @@ Rectangle {
                     width: parent.width
                     height: parent.width
                     color: "#3399FF"
+                    visible: false //-----
                     Image {
                         width: parent.width / 1.5
                         height: parent.width / 1.5
@@ -180,61 +181,89 @@ Rectangle {
                     id: rectTilteChat
                     width: parent.width 
                     height: parent.width * 4 / 24 * 1.5 - 25
+                    color: "transparent"
                     Rectangle {
                         width: parent.width - 20
                         height: parent.height / 2.5
                         anchors.centerIn: parent
+                        color: "transparent"
                         Row {
                             spacing: 10
                             anchors.fill: parent
                             Rectangle {
                                 width: parent.width * 4 / 5
                                 height: parent.height
-                                color: "lightgray"
+                                color: "transparent"
                                 radius: 10
+                                border {
+                                    width: 1
+                                    color: "black"
+                                }
                                 Row {
                                     anchors.fill: parent
-                                    Rectangle {
-                                        width: parent.height
-                                        height: parent.height
-                                        color: "lightgray"
-                                        radius: 10
-                                        Image {
-                                            width: parent.width / 1.5
-                                            height: parent.height / 1.5
-                                            anchors.centerIn: parent
-                                            source: "qrc:/zalo/images/search.png"
+                                    spacing: 10
+                                    Image {
+                                        width: parent.height / 1.2
+                                        height: parent.height / 1.2
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        source: "qrc:/zalo/images/search.png"
+                                        fillMode: Image.PreserveAspectFit
+                                        scale: 0.6
+                                    }
+                                    TextField {
+                                        id: searchGroupChat
+                                        width: parent.width - 10 - parent.height / 2
+                                        placeholderText: "Search for conversations"
+                                        placeholderTextColor: "black"                                
+                                        font.pixelSize: 15
+                                        color: "black"
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        background: Rectangle {
+                                            anchors.fill: parent
+                                            color: "transparent"
                                         }
                                     }
-                                    // Rectangle {
-                                    //     width: parent.width - parent.height
-                                    //     height: parent.height
-                                    //     // anchors.centerIn: parent
-                                    //     radius: 10
-                                    //     // TextField {
-                                    //     //     width: parent.width
-                                    //     //     height: parent.height 
-                                    //     //     placeholderText: "search username"
-                                    //     //     font.pointSize: 10
-                                    //     //     color: "lightgray"
-                                    //     //     // background: Rectangle {
-                                                
-                                    //     //     // }
-                                    //     //     // color: "black"
-                                    //     // }
-                                    // }
                                 }
+                                // RowLayout {
+                                //     anchors.fill: parent
+                                //     Image {
+                                //         Layout.fillHeight: true
+                                //         Layout.fillWidth: false
+                                //         source: "qrc:/zalo/images/search.png"
+                                //         fillMode: Image.PreserveAspectFit
+                                //         scale: 0.6
+                                //     }
+                                //     TextField {
+                                //         id: searchGroupChat
+                                //         Layout.fillWidth: true
+                                //         Layout.fillHeight: true
+                                //         placeholderText: "Search for conversations"
+                                //         placeholderTextColor: "black"                                
+                                //         font.pixelSize: 15
+                                //         color: "black"
+                                //         background: Rectangle {
+                                //             anchors.fill: parent
+                                //             color: "transparent"
+                                //         }
+                                //     }
+                                //     // Item {
+                                //     //     Layout.fillHeight: true
+                                //     //     Layout.fillWidth: false
+                                //     //     Layout.preferredWidth: parent.height     
+                                //     // }
+                                // }
                             }
                             Rectangle {
                                 id: rectAddUser
                                 width: parent.height
                                 height: parent.height
                                 Image {
-                                    // width: parent.width / 1.5   
-                                    // height: parent.width / 1.5
-                                    // anchors.centerIn: parent
                                     anchors.fill: parent
+                                    // width: parent.width / 2
+                                    // height: parent.height / 2
                                     source: "qrc:/zalo/images/addUser.png"
+                                    fillMode: Image.PreserveAspectFit
+                                    scale: 0.6
                                 }
                                 MouseArea {
                                     anchors.fill: parent
@@ -256,10 +285,9 @@ Rectangle {
                                 width: parent.height
                                 height: parent.height
                                 Image {
-                                    // width: parent.width / 1.5   
-                                    // height: parent.width / 1.5
-                                    // anchors.centerIn: parent
                                     anchors.fill: parent
+                                    fillMode: Image.PreserveAspectFit
+                                    scale: 0.6
                                     source: "qrc:/zalo/images/createGroup.png"
                                 }
                                 MouseArea {
@@ -273,7 +301,7 @@ Rectangle {
                                         rectCreateGroup.color = "white"
                                     }
                                     onClicked: {
-                                        
+                                        addNewGroup.visible = true
                                     }
                                 }
                             }
@@ -323,7 +351,7 @@ Rectangle {
                                 height: parent.height
                                 Text {
                                     id: textStatus2
-                                    text: "Chưa đọc"
+                                    text: ""//"Chưa đọc"
                                     font.pointSize: 10
                                     font.bold: true
                                     color: "gray"
@@ -809,7 +837,7 @@ Rectangle {
                                     Text {
                                         id: h20
                                         text: "Việt\nNam"
-                                        font.pointSize: 12
+                                        font.pointSize: 10
                                         font.bold: true
                                         anchors.centerIn: parent
                                     }
@@ -817,12 +845,34 @@ Rectangle {
                                 Rectangle {
                                     width: parent.width - rectOutH20.width - 20
                                     implicitHeight: textPhone.height
-                                    TextField {
-                                        id: textPhone
-                                        width: parent.width 
-                                        placeholderText: "Search phone"
-                                        font.pointSize: 10
-                                        // wrapMode: Text.wordWrap
+                                    color: "transparent"
+                                    radius: 10
+                                    border {
+                                        width: 1
+                                        color: "black"
+                                    }
+                                    RowLayout {
+                                        anchors.fill: parent
+                                        Image {
+                                            Layout.fillHeight: true
+                                            Layout.fillWidth: false
+                                            source: "qrc:/zalo/images/search.png"
+                                            fillMode: Image.PreserveAspectFit
+                                            scale: 0.6
+                                        }
+                                        TextField {
+                                            id: textPhone
+                                            Layout.fillWidth: true
+                                            Layout.fillHeight: true
+                                            placeholderText: "Search phone"
+                                            placeholderTextColor: "black"                                
+                                            font.pixelSize: 15
+                                            color: "black"
+                                            background: Rectangle {
+                                                anchors.fill: parent
+                                                color: "transparent"
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -901,6 +951,357 @@ Rectangle {
                                         
                                         user.sendInfoAddFriend(textPhone.text, userphonePlayer)
                                         addNewPhone.visible = false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ListModel {
+        id: listFriend
+        ListElement {
+            code: "0359899632"
+            ok: "0"
+        }
+        ListElement {
+            code: "0359899632"
+            ok: "0"
+        }
+        ListElement {
+            code: "0359899632"
+            ok: "0"
+        }
+        ListElement {
+            code: "0359899632"
+            ok: "0"
+        }
+        ListElement {
+            code: "0359899632"
+            ok: "0"
+        }
+        ListElement {
+            code: "0359899632"
+            ok: "0"
+        }
+        ListElement {
+            code: "0359899632"
+            ok: "0"
+        }
+        ListElement {
+            code: "0359899632"
+            ok: "0"
+        }
+        ListElement {
+            code: "0359899632"
+            ok: "0"
+        }
+    }
+    // add new group
+    MouseArea {
+        id: addNewGroup
+        anchors.fill: parent
+        visible: true
+        hoverEnabled: false
+        Rectangle { 
+            anchors.fill: parent
+            color: "lightgray"
+            opacity: 0.8
+            visible: addNewGroup.visible
+            radius: 10
+            Rectangle {
+                width: parent.width / 3
+                height: parent.height / 1.5
+                anchors.centerIn: parent
+                Rectangle {
+                    width: parent.width - 20
+                    height: parent.height - 10
+                    anchors.centerIn: parent
+                    Column{
+                        anchors.fill: parent
+                        spacing: 10
+                        Rectangle {
+                            id: rectTitleAddGroup
+                            width: parent.width
+                            height: parent.height / 15
+                            Text {
+                                text: "Create group"
+                                font.pointSize: 10
+                                font.bold: true
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                            Rectangle {
+                                id: rectCloseAddGroup
+                                width: parent.height / 1.5
+                                height: parent.height / 1.5
+                                radius: 180
+                                anchors.right: parent.right
+                                anchors.verticalCenter: parent.verticalCenter
+                                color: "white"
+                                Image {
+                                    anchors.fill: parent
+                                    source: "qrc:/zalo/images/close.png"
+                                    fillMode: Image.PreserveAspectFit
+                                    scale: 0.6
+                                }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    onEntered: {
+                                        this.cursorShape = Qt.PointingHandCursor
+                                        rectCloseAddGroup.color = "lightgray"
+                                    }
+                                    onExited: {
+                                        rectCloseAddGroup.color = "white"
+                                    }
+                                    onClicked: {
+                                        addNewGroup.visible = false
+                                    }
+                                }
+                            }
+                            Canvas{
+                                anchors.fill: parent
+                                onPaint: {
+                                    var ctx = getContext("2d")
+                                    ctx.fillStyle = "transparent"
+                                    ctx.fillRect(0,0,this.width ,this.height )
+                                    ctx.lineWidth = 4;
+                                    ctx.strokeStyle = "lightgray"
+                                    ctx.beginPath()
+                                    ctx.moveTo(0, this.height)
+                                    ctx.lineTo(this.width, this.height)
+                                    ctx.stroke()
+                                }
+                            }
+                        }
+                        Rectangle {
+                            id: rectAddGroupAddName
+                            width: parent.width 
+                            height: parent.height / 10
+                            Row { 
+                                anchors.fill: parent
+                                Rectangle {
+                                    width: parent.height
+                                    height: parent.height
+                                }
+                                TextField {
+                                    id: textNameGroup
+                                    width: parent.width - parent.height
+                                    placeholderText: "Enter group name..."
+                                    placeholderTextColor: "black"                                
+                                    font.pixelSize: 15
+                                    color: "black"
+                                    background: Rectangle {
+                                        anchors.fill: parent
+                                        color: "transparent"
+                                    }
+                                }
+                            }
+                            Canvas{
+                                anchors.fill: parent
+                                onPaint: {
+                                    var ctx = getContext("2d")
+                                    ctx.fillStyle = "transparent"
+                                    ctx.fillRect(0,0,this.width ,this.height )
+                                    ctx.lineWidth = 4;
+                                    ctx.strokeStyle = "lightblue"
+                                    ctx.beginPath()
+                                    ctx.moveTo(this.height, this.height)
+                                    ctx.lineTo(this.width, this.height)
+                                    ctx.stroke()
+                                }
+                            }
+                        }
+                        Rectangle {
+                            id: rectAddGroupSearchName
+                            width: parent.width
+                            height: parent.height / 10
+                            radius: 10
+                            border {
+                                width: 1
+                                color: "black"
+                            }
+                            Row {
+                                anchors.fill: parent
+                                spacing: 10
+                                Image {
+                                    width: parent.height / 1.5
+                                    height: parent.height / 1.5
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    source: "qrc:/zalo/images/search.png"
+                                    fillMode: Image.PreserveAspectFit
+                                    scale: 0.6
+                                }
+                                TextField {
+                                    id: searchUserAddGroup
+                                    width: parent.width - 10 - parent.height / 2
+                                    placeholderText: "Enter name, phone number, or list of phone number here"
+                                    placeholderTextColor: "black"                                
+                                    font.pixelSize: 15
+                                    color: "black"
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    background: Rectangle {
+                                        anchors.fill: parent
+                                        color: "transparent"
+                                    }
+                                }
+                            }
+                        }
+                        Rectangle {
+                            id: rectAddGroupListUser
+                            width: parent.width
+                            height: parent.height * 5.5 / 10
+                            ListView {
+                                width: parent.width 
+                                height: parent.height
+                                contentHeight: parent.height
+                                contentWidth: parent.width
+                                clip: true
+                                ScrollBar.vertical: ScrollBar {
+                                    policy: ScrollBar.AsNeeded
+                                }
+                                boundsBehavior: Flickable.StopAtBounds
+                                model: listFriend
+                                spacing: 10
+                                delegate: friendDelegate
+                            }
+                            Component {
+                                id: friendDelegate
+                                Rectangle {
+                                    id: rectfriendDelegate
+                                    width: rectAddGroupListUser.width 
+                                    height: 30
+                                    color: "white"
+                                    Row {
+                                        anchors.fill: parent
+                                        spacing: 10
+                                        CheckBox {
+                                            id: checkBoxGetUser
+                                            checked: false
+                                            indicator.width: 15
+                                            indicator.height: 15
+                                            anchors.verticalCenter: parent.verticalCenter
+                                            onClicked: {
+                                                if(checked) {
+                                                    listFriend.setProperty(index, "ok", "1")
+                                                } else {
+                                                    listFriend.setProperty(index, "ok", "0")
+                                                }
+                                            }
+                                        }
+                                        Text {
+                                            text: code
+                                            font.pointSize: 13
+                                            anchors.verticalCenter: parent.verticalCenter
+                                            color:"black"
+                                        }
+                                    }
+                                    MouseArea{
+                                        anchors.fill: parent
+                                        hoverEnabled: true
+                                        onPressed: (mouse) => mouse.accepted = false
+                                        onEntered: {
+                                            this.cursorShape = Qt.PointingHandCursor
+                                            rectfriendDelegate.color = "lightgray"
+                                        }
+                                        onExited: {
+                                            rectfriendDelegate.color = "white"
+                                        }
+                                        onClicked: {
+                                            
+                                        }
+                                    }
+                                }
+                            }
+                            Canvas{
+                                anchors.fill: parent
+                                onPaint: {
+                                    var ctx = getContext("2d")
+                                    ctx.fillStyle = "transparent"
+                                    ctx.fillRect(0,0,this.width ,this.height )
+                                    ctx.lineWidth = 4;
+                                    ctx.strokeStyle = "lightgray"
+                                    ctx.beginPath()
+                                    ctx.moveTo(0, this.height)
+                                    ctx.lineTo(this.width, this.height)
+                                    ctx.stroke()
+
+                                    ctx.moveTo(0, 0)
+                                    ctx.lineTo(this.width, 0)
+                                    ctx.stroke()
+                                }
+                            }
+                        }
+                        Rectangle {
+                            id: rectAddGroupOption
+                            width: parent.width
+                            height: parent.height - rectTitleAddGroup.height - rectAddGroupAddName.height - rectAddGroupSearchName.height - rectAddGroupListUser.height - 40
+                            Rectangle {
+                                width: parent.width / 2
+                                height: parent.height
+                                anchors.right: parent.right
+                                Row {
+                                    anchors.fill: parent
+                                    spacing: 20
+                                    Rectangle {
+                                        id: rectCancelGroup
+                                        width: parent.width / 3
+                                        height: parent.height
+                                        color: "#A0A0A0"
+                                        radius: 10
+                                        Text {
+                                            text: "Cancel"
+                                            font.pointSize: 10
+                                            font.bold: true
+                                            color: "black"
+                                            anchors.centerIn: parent
+                                        }
+                                        MouseArea{
+                                            anchors.fill: parent
+                                            hoverEnabled: true
+                                            onEntered: {
+                                                this.cursorShape = Qt.PointingHandCursor
+                                                rectCancelGroup.color = "gray"
+                                            }
+                                            onExited: {
+                                                rectCancelGroup.color = "#A0A0A0"
+                                            }
+                                            onClicked: {
+                                                addNewGroup.visible = false
+                                            }
+                                        }
+                                    }
+                                    Rectangle {
+                                        id: rectOkGroup
+                                        width: parent.width / 2
+                                        height: parent.height
+                                        color: "lightblue"
+                                        radius: 10
+                                        Text {
+                                            text: "Create group"
+                                            font.pointSize: 10
+                                            font.bold: true
+                                            color: "white"
+                                            anchors.centerIn: parent
+                                        }
+                                        MouseArea{
+                                            visible: false
+                                            anchors.fill: parent
+                                            hoverEnabled: true
+                            
+                                            onEntered: {
+                                                this.cursorShape = Qt.PointingHandCursor
+                                                rectOkGroup.color = "blue"
+                                            }
+                                            onExited: {
+                                                rectOkGroup.color = "lightblue"
+                                            }
+                                            onClicked: {
+                                                
+                                            }
+                                        }
                                     }
                                 }
                             }
