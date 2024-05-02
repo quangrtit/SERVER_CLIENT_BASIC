@@ -9,6 +9,11 @@ import Qt5Compat.GraphicalEffects
 Rectangle {
     anchors.fill: parent
     property var stx: 0
+    property var countMessage: listDataChatRealTime.count
+    onCountMessageChanged: {
+        //listDataChat.contentY = listDataChat.contentHeight
+        listDataChat.positionViewAtEnd()
+    }
     Rectangle {
         id: rectDivideChatInfo
         width: parent.width
@@ -455,7 +460,7 @@ Rectangle {
                                                         "checkAvatar": 0,
                                                         "moreInfo": ""
                                                     })
-                                                    listDataChat.contentY = listDataChat.contentHeight //- listDataChat.height + listDataChatRealTime.get(index).message
+                                                    //listDataChat.contentY = listDataChat.contentHeight //- listDataChat.height + listDataChatRealTime.get(index).message
                                                     chatNow.text = ""
                                                     
                                                 }
@@ -743,10 +748,9 @@ Rectangle {
                     "moreInfo": ""
                 })
                 // listDataChat.scrollToBottom()
-                console.log(data);
+                //console.log(data);
             }
-            // if(jsonData["type"] === "chat") console.log(data)
-            
+            listDataChat.positionViewAtEnd()
         }
     }
     Component.onCompleted: {

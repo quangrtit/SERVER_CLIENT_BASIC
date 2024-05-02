@@ -47,7 +47,8 @@ resources.files += \
                 images/bell.png \
                 images/close.png \
                 images/user-icon.png \
-                images/background-login.jpg
+                images/background-login.jpg \
+                images/background-login1.jpg
 resources.prefix = /$${TARGET}
 RESOURCES += resources
 

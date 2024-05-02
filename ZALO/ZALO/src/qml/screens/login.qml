@@ -7,11 +7,11 @@ Rectangle {
     color: "transparent"
     signal changeScreen(string source, string username)
 
-    // Image {
-    //     anchors.fill: parent
-    //     source: "qrc:/zalo/images/background-login.jpg"
-    //     fillMode: Image.Stretch
-    // }
+    Image {
+        anchors.fill: parent
+        source: "qrc:/zalo/images/background-login.jpg"
+        fillMode: Image.Stretch
+    }
     ColumnLayout {
         width: parent.width*0.5
         height: parent.height
@@ -123,6 +123,7 @@ Rectangle {
                                 placeholderText: "Fill username"
                                 placeholderTextColor: "black"                                
                                 font.pixelSize: 15
+                                text: "0359899632"
                                 color: "black"
                                 
                                 background: Rectangle {
@@ -186,6 +187,7 @@ Rectangle {
                                 placeholderTextColor: "black"                                
                                 font.pixelSize: 15
                                 color: "black"
+                                text: "123456"
                                 echoMode: TextInput.Password
                                 background: Rectangle {
                                     anchors.fill: parent
