@@ -34,6 +34,11 @@ public:
     void getAllMessage(QString userphone, QString group_id, QJsonObject& jsonF);
     bool checkInfoRegister(QString userphone, QString password, QJsonObject& jsonF);
     void registerAccount(QString userphone, QString password, QJsonObject& jsonF);
+
+    void getListFriend(QString userphone, QJsonObject& jsonF);
+    void createGroup(QJsonObject& jsonF);
+
+    bool checkGroupExist(QJsonObject& jsonF); // check one group have 3 people are exist ? 
 private:
     QTcpServer server;
     QHash<QString, QTcpSocket*> _clients;// list save all clients
