@@ -121,3 +121,39 @@ void User::sendInfoRegister(QString userphone, QString password, QString passwor
     client.waitForBytesWritten();
     client.flush();
 }
+void User::getListFriend(QString userphone)
+{
+    if(client.state() == QAbstractSocket::UnconnectedState) client.connectToHost("localhost", 1234);
+    QJsonObject json;
+    json["type"] = "listFriend";
+    json["userphoneSender"] = userphone;
+    QJsonDocument jsonDoc(json);
+    QByteArray jsonData = jsonDoc.toJson();
+    client.write(jsonData);
+    client.waitForBytesWritten();
+    client.flush();
+}
+void User::sendListFriendForGroup(QString userphone, QVariantList arrayUserphone, QString groupName)
+{
+    if(client.state() == QAbstractSocket::UnconnectedState) client.connectToHost("localhost", 1234);
+    QJsonObject json;
+    json["type"] = "listFriendForGroup";
+    json["userphoneSender"] = userphone;
+    json["groupName"] = groupName;
+    QJsonArray jsonArrayUserphone;
+    for(QVariant &variant : arrayUserphone)
+    {
+        if(variant.canConvert<QString>()) 
+        {
+            QString stringValue = variant.toString();
+            jsonArrayUserphone.append(stringValue);
+        }
+    }
+    jsonArrayUserphone.append(userphone); // last check ? 
+    json["allUserphoneForGroup"] = jsonArrayUserphone;
+    QJsonDocument jsonDoc(json);
+    QByteArray jsonData = jsonDoc.toJson();
+    client.write(jsonData);
+    client.waitForBytesWritten();
+    client.flush();
+}

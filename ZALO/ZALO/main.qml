@@ -33,6 +33,7 @@ Window {
         target: loader_screen.item
         function onChangeScreen(source, username) {
             if(username !== "") userphonePlayer = username; // đặt sdt lấy từ db
+
             loader_screen.source = source
             // if (source) {
             //     //if(source == "qrc:/zalo/src/qml/screens/mainScreen.qml") user.sendInfoStartRoomChat(userphonePlayer)

@@ -282,6 +282,8 @@ release/moc_user.cpp: src/include/user.h \
 		C:/Qt/6.6.0/mingw_64/include/QtCore/qendian.h \
 		C:/Qt/6.6.0/mingw_64/include/QtCore/QJsonObject \
 		C:/Qt/6.6.0/mingw_64/include/QtCore/qjsonobject.h \
+		C:/Qt/6.6.0/mingw_64/include/QtCore/QJsonArray \
+		C:/Qt/6.6.0/mingw_64/include/QtCore/qjsonarray.h \
 		release/moc_predefs.h \
 		C:/Qt/6.6.0/mingw_64/bin/moc.exe
 	C:\Qt\6.6.0\mingw_64\bin\moc.exe $(DEFINES) --include D:/ALLZALO/ZALO/ZALO/release/moc_predefs.h -IC:/Qt/6.6.0/mingw_64/mkspecs/win32-g++ -ID:/ALLZALO/ZALO/ZALO -IC:/Qt/6.6.0/mingw_64/include -IC:/Qt/6.6.0/mingw_64/include/QtQuick -IC:/Qt/6.6.0/mingw_64/include/QtOpenGL -IC:/Qt/6.6.0/mingw_64/include/QtGui -IC:/Qt/6.6.0/mingw_64/include/QtQmlModels -IC:/Qt/6.6.0/mingw_64/include/QtQml -IC:/Qt/6.6.0/mingw_64/include/QtQmlIntegration -IC:/Qt/6.6.0/mingw_64/include/QtNetwork -IC:/Qt/6.6.0/mingw_64/include/QtSql -IC:/Qt/6.6.0/mingw_64/include/QtCore -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++ -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32 -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed -IC:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include src\include\user.h -o release\moc_user.cpp
@@ -490,7 +492,9 @@ release/main.o: main.cpp C:/Qt/6.6.0/mingw_64/include/QtGui/QGuiApplication \
 		C:/Qt/6.6.0/mingw_64/include/QtCore/quuid.h \
 		C:/Qt/6.6.0/mingw_64/include/QtCore/qendian.h \
 		C:/Qt/6.6.0/mingw_64/include/QtCore/QJsonObject \
-		C:/Qt/6.6.0/mingw_64/include/QtCore/qjsonobject.h
+		C:/Qt/6.6.0/mingw_64/include/QtCore/qjsonobject.h \
+		C:/Qt/6.6.0/mingw_64/include/QtCore/QJsonArray \
+		C:/Qt/6.6.0/mingw_64/include/QtCore/qjsonarray.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\main.o main.cpp
 
 release/user.o: src/cpp/user.cpp src/include/user.h \
@@ -628,6 +632,8 @@ release/user.o: src/cpp/user.cpp src/include/user.h \
 		C:/Qt/6.6.0/mingw_64/include/QtCore/qendian.h \
 		C:/Qt/6.6.0/mingw_64/include/QtCore/QJsonObject \
 		C:/Qt/6.6.0/mingw_64/include/QtCore/qjsonobject.h \
+		C:/Qt/6.6.0/mingw_64/include/QtCore/QJsonArray \
+		C:/Qt/6.6.0/mingw_64/include/QtCore/qjsonarray.h \
 		C:/Qt/6.6.0/mingw_64/include/QtSql/QSqlDatabase \
 		C:/Qt/6.6.0/mingw_64/include/QtSql/qsqldatabase.h \
 		C:/Qt/6.6.0/mingw_64/include/QtSql/qtsqlglobal.h \

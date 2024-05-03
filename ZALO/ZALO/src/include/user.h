@@ -6,7 +6,7 @@
 #include <QTcpSocket>
 #include <QJsonDocument>
 #include <QJsonObject>
-
+#include <QJsonArray>
 class User: public QObject {
     Q_OBJECT
 public:
@@ -20,6 +20,9 @@ public:
     Q_INVOKABLE void sendMessage(QString userphone, QString group_id, QString message);
     Q_INVOKABLE void reloadRoomChat(QString userphone, QString group_id);
     Q_INVOKABLE void sendInfoRegister(QString userphone, QString password, QString passwordAgain);
+
+    Q_INVOKABLE void getListFriend(QString userphone);
+    Q_INVOKABLE void sendListFriendForGroup(QString userphone, QVariantList arrayUserphone, QString groupName);
 signals:
     void dataReceived(QString data);
 public slots: 

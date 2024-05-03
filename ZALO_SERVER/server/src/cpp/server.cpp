@@ -467,7 +467,6 @@ void Server::getAllGroupChatForUser(QString userphone, QJsonObject& jsonF)
         QJsonArray arrInGroup_id, arrInGroup_name;
         while(getDb.next())
         {
-            qDebug() << "demo database: " << getDb.value(0).toInt() << " ";
             int check = getDb.value(0).toInt();
             QString qry = "select database1.groupx.group_name from database1.groupx where group_id = " + QString::number(check);
             QSqlQuery g;

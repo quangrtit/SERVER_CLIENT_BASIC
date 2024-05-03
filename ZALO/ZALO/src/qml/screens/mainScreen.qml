@@ -224,34 +224,6 @@ Rectangle {
                                         }
                                     }
                                 }
-                                // RowLayout {
-                                //     anchors.fill: parent
-                                //     Image {
-                                //         Layout.fillHeight: true
-                                //         Layout.fillWidth: false
-                                //         source: "qrc:/zalo/images/search.png"
-                                //         fillMode: Image.PreserveAspectFit
-                                //         scale: 0.6
-                                //     }
-                                //     TextField {
-                                //         id: searchGroupChat
-                                //         Layout.fillWidth: true
-                                //         Layout.fillHeight: true
-                                //         placeholderText: "Search for conversations"
-                                //         placeholderTextColor: "black"                                
-                                //         font.pixelSize: 15
-                                //         color: "black"
-                                //         background: Rectangle {
-                                //             anchors.fill: parent
-                                //             color: "transparent"
-                                //         }
-                                //     }
-                                //     // Item {
-                                //     //     Layout.fillHeight: true
-                                //     //     Layout.fillWidth: false
-                                //     //     Layout.preferredWidth: parent.height     
-                                //     // }
-                                // }
                             }
                             Rectangle {
                                 id: rectAddUser
@@ -259,8 +231,6 @@ Rectangle {
                                 height: parent.height
                                 Image {
                                     anchors.fill: parent
-                                    // width: parent.width / 2
-                                    // height: parent.height / 2
                                     source: "qrc:/zalo/images/addUser.png"
                                     fillMode: Image.PreserveAspectFit
                                     scale: 0.6
@@ -301,6 +271,7 @@ Rectangle {
                                         rectCreateGroup.color = "white"
                                     }
                                     onClicked: {
+                                        user.getListFriend(userphonePlayer)
                                         addNewGroup.visible = true
                                     }
                                 }
@@ -683,6 +654,17 @@ Rectangle {
         //     colors: "white"
         // }
     }
+    function checkPersonInGroup(json)
+    {
+        for(var i = 0; i < json.length; i++)
+        {
+            if(userphonePlayer === json[i].toString())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
     Connections {
         target: user
         function onDataReceived(data)
@@ -714,9 +696,10 @@ Rectangle {
                     })
                 }
             }
-            else if(type == "startChat")
+            else if(type === "startChat")
             {
                 var arrGroupReceived = jsonData["arrGroup_id"];
+                var arrGroupNameReceived = jsonData["arrGroup_name"]
                 for(var i = 0; i < arrGroupReceived.length; i++)
                 {
                     if(jsonData[arrGroupReceived[i].toString()].length == 2)
@@ -739,10 +722,49 @@ Rectangle {
                             "colors": "white"
                         })
                     }
+                    else 
+                    {
+                        listUsers.append({
+                            "id": arrGroupReceived[i].toString(),
+                            "code": arrGroupNameReceived[i].toString(),
+                            "name": arrGroupNameReceived[i].toString(),
+                            "lastText": "",
+                            "timeLastText": "",
+                            "colors": "white"
+                        })
+                    }
                     
                 }
             }
-            //console.log(data)
+            else if(type === "listFriend")
+            {
+                listFriend.clear()
+                var arrUserphoneReceived = jsonData["allFriend"];
+                for(var i = 0; i < arrUserphoneReceived.length; i++)
+                {
+                    listFriend.append({
+                        "code": arrUserphoneReceived[i].toString(),
+                        "ok": "0"
+                    })
+                }
+            }
+            else if(type === "listFriendForGroup")
+            {
+                var arr = jsonData["allUserphoneForGroup"]
+                if(!checkPersonInGroup(arr) && jsonData["result"] === "create group success")
+                {
+                    listUsers.append({
+                        "id": jsonData["group_id"].toString(),
+                        "code": jsonData["groupName"].toString(),
+                        "name": jsonData["groupName"].toString(),
+                        "lastText": "",
+                        "timeLastText": "",
+                        "colors": "white"
+                    })
+                    addNewGroup.visible = false
+                }
+            }
+            
         }
     }
     MouseArea {
@@ -966,44 +988,12 @@ Rectangle {
             code: "0359899632"
             ok: "0"
         }
-        ListElement {
-            code: "0359899632"
-            ok: "0"
-        }
-        ListElement {
-            code: "0359899632"
-            ok: "0"
-        }
-        ListElement {
-            code: "0359899632"
-            ok: "0"
-        }
-        ListElement {
-            code: "0359899632"
-            ok: "0"
-        }
-        ListElement {
-            code: "0359899632"
-            ok: "0"
-        }
-        ListElement {
-            code: "0359899632"
-            ok: "0"
-        }
-        ListElement {
-            code: "0359899632"
-            ok: "0"
-        }
-        ListElement {
-            code: "0359899632"
-            ok: "0"
-        }
     }
     // add new group
     MouseArea {
         id: addNewGroup
         anchors.fill: parent
-        visible: true
+        visible: false
         hoverEnabled: false
         Rectangle { 
             anchors.fill: parent
@@ -1087,7 +1077,7 @@ Rectangle {
                                     height: parent.height
                                 }
                                 TextField {
-                                    id: textNameGroup
+                                    id: textGroupName
                                     width: parent.width - parent.height
                                     placeholderText: "Enter group name..."
                                     placeholderTextColor: "black"                                
@@ -1277,7 +1267,7 @@ Rectangle {
                                         id: rectOkGroup
                                         width: parent.width / 2
                                         height: parent.height
-                                        color: "lightblue"
+                                        color: "#0000FF"
                                         radius: 10
                                         Text {
                                             text: "Create group"
@@ -1287,19 +1277,26 @@ Rectangle {
                                             anchors.centerIn: parent
                                         }
                                         MouseArea{
-                                            visible: false
                                             anchors.fill: parent
                                             hoverEnabled: true
                             
                                             onEntered: {
                                                 this.cursorShape = Qt.PointingHandCursor
-                                                rectOkGroup.color = "blue"
+                                                rectOkGroup.color = "#0000CC"
                                             }
                                             onExited: {
-                                                rectOkGroup.color = "lightblue"
+                                                rectOkGroup.color = "#0000FF"
                                             }
                                             onClicked: {
-                                                
+                                                var arrFriend = []
+                                                for(var i = 0; i < listFriend.count; i++)
+                                                {
+                                                    if(listFriend.get(i).ok != "0")
+                                                    {
+                                                        arrFriend.push(listFriend.get(i).code);
+                                                    }
+                                                }
+                                                user.sendListFriendForGroup(userphonePlayer, arrFriend, textGroupName.text)
                                             }
                                         }
                                     }
@@ -1312,6 +1309,7 @@ Rectangle {
         }
     }
     Component.onCompleted: {
+        //user.getListFriend(userphonePlayer)
         if(st === 1)
         {
             user.sendInfoStartRoomChat(userphonePlayer)
