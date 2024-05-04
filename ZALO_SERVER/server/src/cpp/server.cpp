@@ -89,7 +89,8 @@ void Server::onReadData() // processing
             json1["userphoneSender"] = json["userphoneSender"].toString();
             json1["message"] = json["message"].toString();
             json1["group_id"] = json["group_id"].toString();
-            this->sendMessageForGroup(json["userphoneSender"].toString(), json["group_id"].toString(), json["message"].toString());
+            json1["timeAndDate"] = json["timeAndDate"].toString();
+            this->sendMessageForGroup(json["userphoneSender"].toString(), json["group_id"].toString(), json["message"].toString(), json["timeAndDate"].toString());
             QJsonDocument jsonDoc1(json1);
             QByteArray jsonData = jsonDoc1.toJson();
             emit dataReceived(jsonData);
@@ -146,7 +147,18 @@ void Server::onReadData() // processing
             QJsonDocument jsonDoc1(json1);
             QByteArray jsonData = jsonDoc1.toJson();
             emit dataReceived(jsonData);
-            qDebug() << "new data was created: " << json1;
+            // qDebug() << "new data was created: " << json1;
+        }
+        else if(type == "getListMember")
+        {
+            QJsonObject json1;
+            json1["sender"] = this->getClientKey(client);
+            json1["type"] = "getListMember";
+            json1["group_id"] = json["group_id"].toString();
+            this->getMemberInGroup(json1);
+            QJsonDocument jsonDoc1(json1);
+            QByteArray jsonData = jsonDoc1.toJson();
+            emit dataReceived(jsonData);
         }
     }
 }
@@ -229,6 +241,15 @@ void Server::onNewMessage(QByteArray ba)
             // send result for sender about list friend by json array
         }
         else if(type == "listFriendForGroup")
+        {
+            for(auto &client: _clients)
+            {
+                client->write(ba);
+                client->waitForBytesWritten();
+                client->flush();
+            }
+        }
+        else if(type == "getListMember")
         {
             for(auto &client: _clients)
             {
@@ -493,9 +514,8 @@ void Server::getAllGroupChatForUser(QString userphone, QJsonObject& jsonF)
     {
         qDebug() << "connect not success";
     }
-    qDebug() << "data is: " << jsonF;
 }
-void Server::sendMessageForGroup(QString userphone, QString group_id, QString message)
+void Server::sendMessageForGroup(QString userphone, QString group_id, QString message, QString timeAndDate)
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
     db.setHostName("localhost");
@@ -506,7 +526,7 @@ void Server::sendMessageForGroup(QString userphone, QString group_id, QString me
     if(db.open())
     {
         QSqlQuery getDb;
-        QString qr = "insert into database1.chathistory (group_id, user_idphone, chat_message, chat_time) values (" + group_id + ", '" + userphone + "', '" + message + "', '')";
+        QString qr = "insert into database1.chathistory (group_id, user_idphone, chat_message, chat_time) values (" + group_id + ", '" + userphone + "', '" + message + "', '" + timeAndDate +"')";
         if(getDb.exec(qr))
         {
             qDebug() << "insert message thành công";
@@ -528,18 +548,21 @@ void Server::getAllMessage(QString userphone, QString group_id, QJsonObject& jso
     if(db.open())
     {
         QSqlQuery getDb;
-        QString qr = "select database1.chathistory.chat_message, database1.chathistory.user_idphone from database1.chathistory where group_id = " + group_id;
+        QString qr = "select database1.chathistory.chat_message, database1.chathistory.user_idphone, database1.chathistory.chat_time from database1.chathistory where group_id = " + group_id;
         if(getDb.exec(qr))
         {
             QJsonArray arrChat;
             QJsonArray arrUser;
+            QJsonArray arrChatTime;
             while(getDb.next())
             {
                 arrChat.append(getDb.value(0).toString());
                 arrUser.append(getDb.value(1).toString());
+                arrChatTime.append(getDb.value(2).toString());
             }
             jsonF["arrChat"] = arrChat;
             jsonF["arrUser"] = arrUser;
+            jsonF["arrTime"] = arrChatTime;
             jsonF["group_id"] = group_id;
         }
     }
@@ -718,30 +741,36 @@ bool Server::checkGroupExist(QJsonObject& jsonF)
 void Server::createGroup(QJsonObject& jsonF)
 {
     checkGroupExist(jsonF);
-    // QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
-    // db.setHostName("localhost");
-    // db.setPort(5432);
-    // db.setDatabaseName("networking");
-    // db.setUserName("postgres");
-    // db.setPassword("123456");
-    // if(!checkGroupExist(jsonF))
-    // {
-    //     // group in database is exist
-    //     return;
-    // }
-    // if(db.open())
-    // {
-    //     QSqlQuery getDb;
-    //     QString qr = "";
-    //     if(getDb.exec(qr))
-    //     {
-
-    //     }
-    // }
-    // else 
-    // {
-    //     qDebug() << "connect create group not success";
-    // }
+}
+void Server::getMemberInGroup(QJsonObject& jsonF)
+{
+    QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
+    db.setHostName("localhost");
+    db.setPort(5432);
+    db.setDatabaseName("networking");
+    db.setUserName("postgres");
+    db.setPassword("123456");
+    
+    if(db.open())
+    {
+        QJsonArray arrMember;
+        QSqlQuery qrUse;
+        QString qrs = "select database1.users_groupx.user_idphone from database1.users_groupx where group_id = " + jsonF["group_id"].toString();
+        if(qrUse.exec(qrs))
+        {
+            while(qrUse.next())
+            {
+                arrMember.append(qrUse.value(0).toString());
+            }
+        }
+        jsonF["arrMember"] = arrMember;
+        jsonF["result"] = "get member success";
+    }
+    else 
+    {
+        jsonF["result"] = "get member not success";
+        qDebug() << "connect member not success";
+    }
 }
 QString Server::getClientKey(QTcpSocket *client)
 {

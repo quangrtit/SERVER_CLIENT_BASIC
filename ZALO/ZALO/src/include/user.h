@@ -17,12 +17,15 @@ public:
     Q_INVOKABLE void sendInfoLogoffToServer(QString userphone);
     Q_INVOKABLE void sendInfoAddFriend(QString userphoneFriend, QString userphoneSender);
     Q_INVOKABLE void sendInfoStartRoomChat(QString userphoneSender);
-    Q_INVOKABLE void sendMessage(QString userphone, QString group_id, QString message);
+    Q_INVOKABLE void sendMessage(QString userphone, QString group_id, QString message, QString timeAndDate);
     Q_INVOKABLE void reloadRoomChat(QString userphone, QString group_id);
     Q_INVOKABLE void sendInfoRegister(QString userphone, QString password, QString passwordAgain);
 
     Q_INVOKABLE void getListFriend(QString userphone);
     Q_INVOKABLE void sendListFriendForGroup(QString userphone, QVariantList arrayUserphone, QString groupName);
+
+    Q_INVOKABLE void getLastTextForGroup(QString userphone);
+    Q_INVOKABLE void getListMemberForGroup(QString group_id);
 signals:
     void dataReceived(QString data);
 public slots: 

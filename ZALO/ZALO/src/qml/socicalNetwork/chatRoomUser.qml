@@ -38,7 +38,14 @@ Rectangle {
                                 width: parent.height
                                 height: parent.height
                                 radius: 180
-                                color: "lightblue"
+                                border.width: 2
+                                border.color: "lightblue"
+                                Image {
+                                    anchors.fill: parent
+                                    source: "qrc:/zalo/images/cloudChat.jpg"
+                                    fillMode: Image.PreserveAspectFit
+                                    scale: 0.8
+                                }
                             }
                             Rectangle {
                                 width: parent.height * 3
@@ -51,7 +58,6 @@ Rectangle {
                                         text: nameGroup
                                         font.pointSize: 12
                                         color: "black"
-                                        font.bold: true
                                     }
                                     Text {
                                         text: ""
@@ -176,7 +182,6 @@ Rectangle {
                                             }
                                             else 
                                             {
-                                                
                                                 rectInfomationChat.width = 0
 
                                             }
@@ -227,8 +232,8 @@ Rectangle {
                         id: chatHistoryDelegate
                         Rectangle{
                             id: rectMess
-                            height: messageText.implicitHeight + 24
-                            width: messageText.implicitWidth + 24
+                            height: messageText.implicitHeight + 24 * 3
+                            width: messageText.implicitWidth + 24 * 3
                             // color: "blue"
                             color: objects === "me" ? "blue" : "silver"
                             x: objects == "me" ? listDataChat.width - width : 0
@@ -240,20 +245,27 @@ Rectangle {
                                 anchors.margins: 12
                                 color: objects === "me" ? "white" : "black"
                                 opacity: 0.8
-                                font.pixelSize: 13
+                                font.pointSize: 15
                                 font.family: "Helvetica"
                                 verticalAlignment: Qt.AlignVCenter
                                 horizontalAlignment: objects === "me" ? Qt.AlignLeft : Qt.AlignRight
                             }
                             Text {
                                 text: name
-                                font.pixelSize: 10
-                                color: "#606060"
-                                x: 13
-                                y: rectMess.height
-                                // Component.onCompleted: {
-                                //     console.log("this is: ", name, " ", x, " ", y)
-                                // }
+                                font.pointSize: 9
+                                //color: "#606060"
+                                color: objects === "me" ? "white" : "black"
+                                x: 0
+                                anchors.top: parent.top
+                            }
+                            Text {
+                                text: time
+                                font.pointSize: 9
+                                //color: "#606060"
+                                color: objects === "me" ? "white" : "black"
+                                x: 0
+                                y: parent.height
+                                //anchors.bottom: parent.bottom
                             }
                         }
                         
@@ -276,7 +288,7 @@ Rectangle {
                 Rectangle {
                     id: rectTool
                     width: parent.width 
-                    height: parent.height * 0.4 / 12
+                    height: parent.height * 0.6 / 12
                     Rectangle {
                         width: parent.width - 10
                         height: parent.height / 1.6
@@ -312,6 +324,8 @@ Rectangle {
                                     Image {
                                         anchors.fill: parent
                                         source: listToolChat.get(index).source
+                                        fillMode: Image.PreserveAspectFit
+                                        scale: 0.8
                                     }
                                     MouseArea {
                                         anchors.fill: parent
@@ -337,8 +351,8 @@ Rectangle {
                             var ctx = getContext("2d")
                             ctx.fillStyle = "transparent"
                             ctx.fillRect(0,0,this.width ,this.height )
-                            ctx.lineWidth = 4;
-                            ctx.strokeStyle = "lightgray"
+                            ctx.lineWidth = 1;
+                            ctx.strokeStyle = "blue"
                             ctx.beginPath()
                             ctx.moveTo(0, this.height)
                             ctx.lineTo(this.width, this.height)
@@ -363,30 +377,21 @@ Rectangle {
                                     width: parent.width
                                     height: parent.height
                                     
-                                    verticalAlignment: Qt.AlignVCenter
+                                    //verticalAlignment: Qt.AlignVCenter
                                     placeholderText: qsTr("Type Message...")
+                                    placeholderTextColor: "lightgray"
                                     font.family: "Heltiveca"
-                                    font.pointSize: 10
+                                    font.pointSize: 12
                                     wrapMode: TextArea.Wrap
+                                    color: "black"
                                     background: Rectangle {
                                         width: parent.width
                                         height: parent.height
-                                        color: "silver"
+                                        //color: "silver"
                                         //radius: 15
                                     }
                                 }
                             }
-                            // TextArea {
-                            //     id: chatNow
-                            //     width: parent.width
-                            //     placeholderText: qsTr("Type Message...")
-                            //     font.pointSize: 11
-                            //     color: "black"
-                            //     wrapMode: TextArea.Wrap
-                            //     onContentHeightChanged: {
-                                    
-                            //     }
-                            // }
                             
                         }
                         Rectangle {
@@ -406,10 +411,12 @@ Rectangle {
                                         id: rectEmot
                                         width: parent.height
                                         height: parent.height
-
+                                        radius: 180
                                         Image {
                                             anchors.fill: parent
                                             source: "qrc:/zalo/images/faceSymbol.png"
+                                            fillMode: Image.PreserveAspectFit
+                                            scale: 0.8
                                         }
                                         MouseArea {
                                             anchors.fill: parent
@@ -430,17 +437,19 @@ Rectangle {
                                         id: rectSendMessage
                                         width: parent.height 
                                         height: parent.height
-
+                                        radius: 10
                                         Image {
                                             anchors.fill: parent
                                             source: "qrc:/zalo/images/like.png"
+                                            fillMode: Image.PreserveAspectFit
+                                            scale: 0.8
                                         }
                                         MouseArea {
                                             anchors.fill: parent
                                             hoverEnabled: true
                                             onEntered: {
                                                 this.cursorShape = Qt.PointingHandCursor
-                                                rectSendMessage.color = "#E0E0E0"
+                                                rectSendMessage.color = "lightblue"
                                             }
                                             onExited: {
                                                 rectSendMessage.color = "white"
@@ -448,12 +457,13 @@ Rectangle {
                                             onClicked: {
                                                 if(chatNow.text !== "")
                                                 {
-                                                    user.sendMessage(userphonePlayer, group_now, chatNow.text)
+                                                    var timeAndDate = Qt.formatDateTime(new Date(), 'hh:mm') + " " + Qt.formatDateTime(new Date(), 'ddd, dd-MM-yyyy')
+                                                    user.sendMessage(userphonePlayer, group_now, chatNow.text, timeAndDate)
                                                     listDataChatRealTime.append({
                                                         "name": userphonePlayer,
                                                         "objects": "me",
                                                         "message": chatNow.text,
-                                                        "time": "10.20",
+                                                        "time": timeAndDate,
                                                         "w": 0,
                                                         "h": 0,
                                                         "x": 0,
@@ -487,7 +497,7 @@ Rectangle {
                         Text {
                             text: "Thông tin hội thoại"
                             font.pointSize: 12
-                            font.bold: true
+                            
                             anchors.centerIn: parent
                             visible: rectInfomationChat.width === 0 ? false : true
                         }
@@ -521,11 +531,20 @@ Rectangle {
                                     anchors.fill: parent
                                     spacing: 10
                                     Rectangle {
+                                        id: rectAvatarInfo
                                         width: parent.width / 4
                                         height: width
                                         radius: 180
-                                        color: "blue"
+                                        // color: "blue"
                                         anchors.horizontalCenter: parent.horizontalCenter
+                                        border.width: 1
+                                        border.color: "lightblue"
+                                        Image {
+                                            anchors.fill: parent
+                                            source: "qrc:/zalo/images/cloudChat.jpg"
+                                            fillMode: Image.PreserveAspectFit
+                                            scale: 0.8
+                                        }
                                     }
                                     Rectangle {
                                         width: parent.width / 4 
@@ -539,7 +558,8 @@ Rectangle {
                                                 id: rectInfoAboutPhone
                                                 text: nameGroup
                                                 font.pointSize: 12
-                                                font.bold: true
+                                                width: rectAvatarInfo.width
+                                                elide: Text.ElideRight
                                                 anchors.centerIn: parent
                                                 visible: rectInfomationChat.width === 0 ? false : true
                                             }
@@ -548,12 +568,14 @@ Rectangle {
                                             id: rectChangeName
                                             width: parent.height
                                             height: parent.height
-                                            x: parent.width + 10
+                                            x: parent.width + 20
                                             radius: 180
                                             visible: rectInfomationChat.width === 0 ? false : true
                                             Image {
                                                 anchors.fill: parent
                                                 source: "qrc:/zalo/images/write.png"
+                                                fillMode: Image.PreserveAspectFit
+                                                scale: 0.8
                                             }
                                             MouseArea {
                                                 anchors.fill: parent
@@ -588,6 +610,8 @@ Rectangle {
                                                 Image {
                                                     anchors.fill: parent
                                                     source: "qrc:/zalo/images/bell.png"
+                                                    fillMode: Image.PreserveAspectFit
+                                                    scale: 0.8
                                                 }
                                                 MouseArea {
                                                     anchors.fill: parent
@@ -626,19 +650,107 @@ Rectangle {
                             id: allFileOrLinkSend
                             width: parent.width 
                             height: parent.height - rectDivideAvatar.height
-                            color: "lightblue"
+                            // color: "lightblue"
                             Column {
                                 anchors.fill: parent
                                 Rectangle {
                                     width: parent.width 
                                     height: 40
                                     Text {
-                                        text: "All link or file"
+                                        text: "List member"
                                         font.pointSize: 12
                                         anchors.centerIn: parent
                                         visible: rectInfomationChat.width === 0 ? false : true
                                     }
+                                    Canvas{
+                                        anchors.fill: parent
+                                        onPaint: {
+                                            var ctx = getContext("2d")
+                                            ctx.fillStyle = "transparent"
+                                            ctx.fillRect(0,0,this.width ,this.height )
+                                            ctx.lineWidth = 4;
+                                            ctx.strokeStyle = "lightgray"
+                                            ctx.beginPath()
+                                            ctx.moveTo(this.width, this.height)
+                                            ctx.lineTo(0, this.height)
+
+
+                                            ctx.stroke()
+                                        }
+                                    }
                                 }
+                                Rectangle {
+                                    id: rectListMember
+                                    width: parent.width 
+                                    height: parent.height / 2
+                                    ListView {
+                                        id: listViewMemberInGr
+                                        width: parent.width - 20
+                                        height: parent.height - 20
+                                        anchors.centerIn: parent
+                                        contentWidth: parent.width
+                                        contentHeight: parent.height
+                                        ScrollBar.vertical: ScrollBar {
+                                            policy: ScrollBar.AsNeeded
+                                        }
+                                        boundsBehavior: Flickable.StopAtBounds
+                                        model: listMemberInGroup
+                                        clip: true
+                                        spacing: 10
+                                        delegate: memberDelegate
+                                    }
+                                    Component {
+                                        id: memberDelegate
+                                        Rectangle {
+                                            width: listViewMemberInGr.width 
+                                            height: 40
+                                            // color: index % 2 === 0 ? "red" : "blue"
+                                            Row {
+                                                anchors.fill: parent
+                                                spacing: 10
+                                                Rectangle {
+                                                    width: parent.height
+                                                    height: parent.height
+                                                    radius: 180
+                                                    border.width: 1
+                                                    border.color: "lightblue"
+                                                    Image {
+                                                        anchors.fill: parent
+                                                        source: "qrc:/zalo/images/cloudChat.jpg"
+                                                        fillMode: Image.PreserveAspectFit
+                                                        scale: 0.7
+                                                    }
+                                                }
+                                                Rectangle {
+                                                    width: parent.width - parent.height - 10
+                                                    height: parent.height
+                                                    Text {
+                                                        text: code 
+                                                        font.pointSize: 10
+                                                        anchors.verticalCenter: parent.verticalCenter
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    Canvas{
+                                        anchors.fill: parent
+                                        onPaint: {
+                                            var ctx = getContext("2d")
+                                            ctx.fillStyle = "transparent"
+                                            ctx.fillRect(0,0,this.width ,this.height )
+                                            ctx.lineWidth = 4;
+                                            ctx.strokeStyle = "lightgray"
+                                            ctx.beginPath()
+                                            ctx.moveTo(this.width, this.height)
+                                            ctx.lineTo(0, this.height)
+
+                                            
+                                            ctx.stroke()
+                                        }
+                                    }
+                                }
+
                             }
                         }
                     }
@@ -689,11 +801,9 @@ Rectangle {
             // solve width and hight from message
             
         }
+        //user.getListMemberForGroup(group_now) // tạm thời #####################################################################################
     }
-    function loadDataChat()
-    {
 
-    }
     ListModel {
         id: listDataChatRealTime
         // ListElement {
@@ -707,24 +817,33 @@ Rectangle {
         //     moreInfo: "" 
         // }
     }
+    ListModel {
+        id: listMemberInGroup
+        // ListElement {
+        //     code: "quang "
+        //     ok: "0"
+        // }
+    }
     Connections {
         target: user
         function onDataReceived(data)
         {
             var jsonData = JSON.parse(data)
             var type = jsonData.type
-            if(jsonData["type"] === "reloadRoomChat" && group_now === jsonData["group_id"].toString())
+            
+            if(jsonData["type"].toString() === "reloadRoomChat" && group_now === jsonData["group_id"].toString())
             {
                 listDataChatRealTime.clear();
                 var arr1 = jsonData["arrChat"]
                 var arr2 = jsonData["arrUser"]
+                var arr3 = jsonData["arrTime"]
                 for(var i = 0; i < arr1.length; i++)
                 {
                     listDataChatRealTime.append({
                         "name": arr2[i],
                         "objects": arr2[i] === userphonePlayer ? "me" : "friend",
                         "message": arr1[i],
-                        "time": "0000",
+                        "time": arr3[i],
                         "w": 0,
                         "h": 0,
                         "x": 0,
@@ -740,7 +859,7 @@ Rectangle {
                     "name": jsonData["userphoneSender"].toString(),
                     "objects": "friend",
                     "message": jsonData["message"].toString(),
-                    "time": "0000",
+                    "time": jsonData["timeAndDate"].toString(),
                     "w": 0,
                     "h": 0,
                     "x": 0,
@@ -750,10 +869,24 @@ Rectangle {
                 // listDataChat.scrollToBottom()
                 //console.log(data);
             }
+            // else if(jsonData["type"].toString() === "getListMember" && jsonData["result"].toString() === "get member success" && group_now === jsonData["group_id"].toString())
+            // {
+            //     console.log(data)
+            //     var arrMember = jsonData["arrMember"];
+            //     for(var i = 0; i < arrMember.length; i++)
+            //     {
+            //         listMemberInGroup.append({
+            //             "code": arrMember[i].toString(),
+            //             "ok": "0"
+            //         })
+            //     }
+            // }
             listDataChat.positionViewAtEnd()
         }
+        
     }
     Component.onCompleted: {
         resolve()
+        
     }
 }

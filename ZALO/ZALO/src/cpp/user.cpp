@@ -80,7 +80,7 @@ void User::sendInfoStartRoomChat(QString userphoneSender)
     client.waitForBytesWritten();
     client.flush();
 }
-void User::sendMessage(QString userphone, QString group_id, QString message)
+void User::sendMessage(QString userphone, QString group_id, QString message, QString timeAndDate)
 {
     if(client.state() == QAbstractSocket::UnconnectedState) client.connectToHost("localhost", 1234);
     QJsonObject json;
@@ -88,6 +88,7 @@ void User::sendMessage(QString userphone, QString group_id, QString message)
     json["userphoneSender"] = userphone;
     json["group_id"] = group_id;
     json["message"] = message;
+    json["timeAndDate"] = timeAndDate;
     QJsonDocument jsonDoc(json);
     QByteArray jsonData = jsonDoc.toJson();
     client.write(jsonData);
@@ -151,6 +152,30 @@ void User::sendListFriendForGroup(QString userphone, QVariantList arrayUserphone
     }
     jsonArrayUserphone.append(userphone); // last check ? 
     json["allUserphoneForGroup"] = jsonArrayUserphone;
+    QJsonDocument jsonDoc(json);
+    QByteArray jsonData = jsonDoc.toJson();
+    client.write(jsonData);
+    client.waitForBytesWritten();
+    client.flush();
+}
+void User::getLastTextForGroup(QString userphone)
+{
+    // if(client.state() == QAbstractSocket::UnconnectedState) client.connectToHost("localhost", 1234);
+    // QJsonObject json;
+    // json["type"] = "getLastText";
+    // json["userphoneSender"] = userphone;
+    // QJsonDocument jsonDoc(json);
+    // QByteArray jsonData = jsonDoc.toJson();
+    // client.write(jsonData);
+    // client.waitForBytesWritten();
+    // client.flush();
+}
+void User::getListMemberForGroup(QString group_id)
+{
+    if(client.state() == QAbstractSocket::UnconnectedState) client.connectToHost("localhost", 1234);
+    QJsonObject json;
+    json["type"] = "getListMember";
+    json["group_id"] = group_id;
     QJsonDocument jsonDoc(json);
     QByteArray jsonData = jsonDoc.toJson();
     client.write(jsonData);

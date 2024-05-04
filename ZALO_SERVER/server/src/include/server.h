@@ -29,7 +29,7 @@ public:
     bool checkUserphoneExist(QString userphone); // check one phone number is exist 
     int checkGroupExist(QString userphone, QString userphoneFriend, QJsonObject& jsonF); // check two phone number is friend if not have it will create 1 group 
     QString getNameIndatabase(QString userphone); 
-    void sendMessageForGroup(QString userphone, QString group_id, QString message);
+    void sendMessageForGroup(QString userphone, QString group_id, QString message, QString timeAndDate);
     void getAllGroupChatForUser(QString userphone, QJsonObject& jsonF);
     void getAllMessage(QString userphone, QString group_id, QJsonObject& jsonF);
     bool checkInfoRegister(QString userphone, QString password, QJsonObject& jsonF);
@@ -39,6 +39,7 @@ public:
     void createGroup(QJsonObject& jsonF);
 
     bool checkGroupExist(QJsonObject& jsonF); // check one group have 3 people are exist ? 
+    void getMemberInGroup(QJsonObject& jsonF);
 private:
     QTcpServer server;
     QHash<QString, QTcpSocket*> _clients;// list save all clients

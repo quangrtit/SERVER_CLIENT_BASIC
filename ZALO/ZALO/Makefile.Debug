@@ -124,8 +124,10 @@ debug/qrc_qmake_resources.cpp: debug/qmake_resources.qrc \
 		images/divide1.png \
 		images/background-login.jpg \
 		images/st.png \
+		images/cloudChat.jpg \
 		images/background-login1.jpg \
 		images/symbolChat2.png \
+		images/defaultAvatar.jpg \
 		images/createGroup.png \
 		images/imageSymbol.png \
 		images/sticker.png \

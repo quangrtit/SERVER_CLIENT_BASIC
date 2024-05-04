@@ -29,24 +29,30 @@ Rectangle {
                     height: parent.width * 1.5
                     color: "#3399FF"
                     Rectangle {
+                        id: rectaAvatar
                         width: parent.width - 20
                         height: parent.width - 20
                         anchors.centerIn: parent
                         radius: 180
                         color: "#3399FF"
+                        //color : "#808080"
                         border.width: 2
                         border.color: "white"
                         Image {
-                            source: ""
+                            anchors.fill: parent
+                            source: "qrc:/zalo/images/user-icon.png"
+                            fillMode: Image.PreserveAspectFit
+                            scale: 0.6
                         }
                         MouseArea {
                             anchors.fill: parent
                             hoverEnabled: true
                             onEntered: {
                                 this.cursorShape = Qt.PointingHandCursor
+                                rectaAvatar.color = "#0066CC";
                             }
                             onExited: {
-                                
+                                rectaAvatar.color = "#3399FF";
                             }
                             onClicked: {
 
@@ -91,10 +97,12 @@ Rectangle {
                         height: parent.width / 1.5
                         anchors.centerIn: parent
                         source: "qrc:/zalo/images/contacts.jpg"
+                        visible: parent.visible
                     }
                     MouseArea {
                         anchors.fill: parent
                         hoverEnabled: true
+                        visible: parent.visible
                         onEntered: {
                             this.cursorShape = Qt.PointingHandCursor
                             rectFriend.color = "#0066CC"
@@ -123,10 +131,12 @@ Rectangle {
                         height: parent.width / 1.5
                         anchors.centerIn: parent
                         source: "qrc:/zalo/images/toolBox.png"
+                        visible: false
                     }
                     MouseArea {
                         anchors.fill: parent
                         hoverEnabled: true
+                        visible: false
                         onEntered: {
                             this.cursorShape = Qt.PointingHandCursor
                             rectSetting.color = "#0066CC"
@@ -229,6 +239,7 @@ Rectangle {
                                 id: rectAddUser
                                 width: parent.height
                                 height: parent.height
+                                radius: 180
                                 Image {
                                     anchors.fill: parent
                                     source: "qrc:/zalo/images/addUser.png"
@@ -254,6 +265,7 @@ Rectangle {
                                 id: rectCreateGroup
                                 width: parent.height
                                 height: parent.height
+                                radius: 180
                                 Image {
                                     anchors.fill: parent
                                     fillMode: Image.PreserveAspectFit
@@ -403,8 +415,14 @@ Rectangle {
                                         height: parent.height
                                         radius: 180
                                         border.width: 2
-                                        border.color: "lightblue"
-                                        color: listUsers.get(index).colors
+                                        border.color: listUsers.get(index).colors
+                                        color: "white"//
+                                        Image {
+                                            anchors.fill: parent
+                                            source: "qrc:/zalo/images/cloudChat.jpg"
+                                            fillMode: Image.PreserveAspectFit
+                                            scale: 0.8
+                                        }
                                     }
                                     Rectangle {
                                         width: parent.width - 2 * parent.height - 20
@@ -421,7 +439,7 @@ Rectangle {
                                                 elide: Text.ElideRight 
                                                 wrapMode: Text.Wrap 
                                                 color: "black"
-                                                font.bold: true
+                                                
                                             }
                                             Text {
                                                 text: listUsers.get(index).lastText
@@ -461,9 +479,9 @@ Rectangle {
                                 onClicked: { 
                                     for(var i = 0; i < listUsers.count; i++)
                                     {
-                                        listUsers.setProperty(i, "colors", "white");
+                                        listUsers.setProperty(i, "colors", "lightblue");
                                     }
-                                    listUsers.setProperty(index, "colors", "#E0E0E0");
+                                    listUsers.setProperty(index, "colors", "#000099");
                                     group_now = listUsers.get(index).id
                                     nameGroup = listUsers.get(index).name
                                     user.reloadRoomChat(userphonePlayer, group_now)
@@ -681,7 +699,7 @@ Rectangle {
                         "name": jsonData["userphoneFriend"].toString(),
                         "lastText": "",
                         "timeLastText": "",
-                        "colors": "white"
+                        "colors": "lightblue"
                     })
                 }
                 else if(userphonePlayer == jsonData["userphoneFriend"].toString())
@@ -692,9 +710,10 @@ Rectangle {
                         "name": jsonData["userphone"].toString(),
                         "lastText": "",
                         "timeLastText": "",
-                        "colors": "white"
+                        "colors": "lightblue"
                     })
                 }
+                addNewPhone.visible = false
             }
             else if(type === "startChat")
             {
@@ -719,7 +738,7 @@ Rectangle {
                             "name": nameFriend,
                             "lastText": "",
                             "timeLastText": "",
-                            "colors": "white"
+                            "colors": "lightblue"
                         })
                     }
                     else 
@@ -730,7 +749,7 @@ Rectangle {
                             "name": arrGroupNameReceived[i].toString(),
                             "lastText": "",
                             "timeLastText": "",
-                            "colors": "white"
+                            "colors": "lightblue"
                         })
                     }
                     
@@ -759,7 +778,7 @@ Rectangle {
                         "name": jsonData["groupName"].toString(),
                         "lastText": "",
                         "timeLastText": "",
-                        "colors": "white"
+                        "colors": "lightblue"
                     })
                     addNewGroup.visible = false
                 }
@@ -972,7 +991,7 @@ Rectangle {
                                     onClicked: {
                                         
                                         user.sendInfoAddFriend(textPhone.text, userphonePlayer)
-                                        addNewPhone.visible = false
+                                        
                                     }
                                 }
                             }
@@ -1185,6 +1204,8 @@ Rectangle {
                                             text: code
                                             font.pointSize: 13
                                             anchors.verticalCenter: parent.verticalCenter
+                                            width: parent.width / 2
+                                            elide: Text.ElideRight
                                             color:"black"
                                         }
                                     }
