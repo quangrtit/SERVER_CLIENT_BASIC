@@ -50,7 +50,8 @@ resources.files += \
                 images/background-login.jpg \
                 images/background-login1.jpg \
                 images/defaultAvatar.jpg \
-                images/cloudChat.jpg
+                images/cloudChat.jpg \
+                images/threeDots.png
 resources.prefix = /$${TARGET}
 RESOURCES += resources
 

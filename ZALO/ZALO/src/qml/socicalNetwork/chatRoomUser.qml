@@ -508,7 +508,7 @@ Rectangle {
                         Rectangle {
                             id: rectDivideAvatar
                             width: parent.width 
-                            height: parent.height / 3
+                            height: parent.height / 3.5
                             Canvas{
                                 anchors.fill: parent
                                 onPaint: {
@@ -596,7 +596,7 @@ Rectangle {
                                     Rectangle {
                                         id: rectAboutCustomer
                                         width: parent.width / 4
-                                        height: width * 1.5
+                                        height: 30//width * 1.3
                                         anchors.horizontalCenter: parent.horizontalCenter
                                         visible: rectInfomationChat.width === 0 ? false : true
                                         Column {
@@ -654,6 +654,7 @@ Rectangle {
                             Column {
                                 anchors.fill: parent
                                 Rectangle {
+                                    id: rectButtonlistMember
                                     width: parent.width 
                                     height: 40
                                     Text {
@@ -661,6 +662,20 @@ Rectangle {
                                         font.pointSize: 12
                                         anchors.centerIn: parent
                                         visible: rectInfomationChat.width === 0 ? false : true
+                                    }
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        hoverEnabled: true
+                                        onEntered: {
+                                            this.cursorShape = Qt.PointingHandCursor
+                                            rectClose.color = "lightgray"
+                                        }
+                                        onExited: {
+                                            rectClose.color = "white"
+                                        }
+                                        onClicked: {
+                                            addNewPhone.visible = false
+                                        }
                                     }
                                     Canvas{
                                         anchors.fill: parent
@@ -673,8 +688,6 @@ Rectangle {
                                             ctx.beginPath()
                                             ctx.moveTo(this.width, this.height)
                                             ctx.lineTo(0, this.height)
-
-
                                             ctx.stroke()
                                         }
                                     }
@@ -801,7 +814,7 @@ Rectangle {
             // solve width and hight from message
             
         }
-        //user.getListMemberForGroup(group_now) // tạm thời #####################################################################################
+       
     }
 
     ListModel {
@@ -817,13 +830,7 @@ Rectangle {
         //     moreInfo: "" 
         // }
     }
-    ListModel {
-        id: listMemberInGroup
-        // ListElement {
-        //     code: "quang "
-        //     ok: "0"
-        // }
-    }
+    
     Connections {
         target: user
         function onDataReceived(data)
@@ -869,24 +876,11 @@ Rectangle {
                 // listDataChat.scrollToBottom()
                 //console.log(data);
             }
-            // else if(jsonData["type"].toString() === "getListMember" && jsonData["result"].toString() === "get member success" && group_now === jsonData["group_id"].toString())
-            // {
-            //     console.log(data)
-            //     var arrMember = jsonData["arrMember"];
-            //     for(var i = 0; i < arrMember.length; i++)
-            //     {
-            //         listMemberInGroup.append({
-            //             "code": arrMember[i].toString(),
-            //             "ok": "0"
-            //         })
-            //     }
-            // }
             listDataChat.positionViewAtEnd()
         }
         
     }
     Component.onCompleted: {
         resolve()
-        
     }
 }

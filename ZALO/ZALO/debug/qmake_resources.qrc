@@ -34,5 +34,6 @@
 <file alias="images/background-login1.jpg">D:/ALLZALO/ZALO/ZALO/images/background-login1.jpg</file>
 <file alias="images/defaultAvatar.jpg">D:/ALLZALO/ZALO/ZALO/images/defaultAvatar.jpg</file>
 <file alias="images/cloudChat.jpg">D:/ALLZALO/ZALO/ZALO/images/cloudChat.jpg</file>
+<file alias="images/threeDots.png">D:/ALLZALO/ZALO/ZALO/images/threeDots.png</file>
 </qresource>
 </RCC>

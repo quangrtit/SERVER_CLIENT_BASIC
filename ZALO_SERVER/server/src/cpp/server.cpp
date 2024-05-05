@@ -149,7 +149,7 @@ void Server::onReadData() // processing
             emit dataReceived(jsonData);
             // qDebug() << "new data was created: " << json1;
         }
-        else if(type == "getListMember")
+        else if(json["type"].toString() == "getListMember")
         {
             QJsonObject json1;
             json1["sender"] = this->getClientKey(client);
@@ -159,7 +159,9 @@ void Server::onReadData() // processing
             QJsonDocument jsonDoc1(json1);
             QByteArray jsonData = jsonDoc1.toJson();
             emit dataReceived(jsonData);
+            qDebug() << "new data is are is: " << json1;
         }
+        
     }
 }
 void Server::onClientDisconnected()
@@ -251,13 +253,12 @@ void Server::onNewMessage(QByteArray ba)
         }
         else if(type == "getListMember")
         {
-            for(auto &client: _clients)
-            {
-                client->write(ba);
-                client->waitForBytesWritten();
-                client->flush();
-            }
+            _clients[json["sender"].toString()]->write(ba);
+            _clients[json["sender"].toString()]->waitForBytesWritten();
+            _clients[json["sender"].toString()]->flush();
+            // send result for sender about list member in one group of user send by json array
         }
+        qDebug() << "this is json is sended : " << json;
         return;
     }
     // send data for all clients 
@@ -564,6 +565,15 @@ void Server::getAllMessage(QString userphone, QString group_id, QJsonObject& jso
             jsonF["arrUser"] = arrUser;
             jsonF["arrTime"] = arrChatTime;
             jsonF["group_id"] = group_id;
+        }
+        if(getDb.exec("select database1.users_groupx.user_idphone from database1.users_groupx where group_id = " + group_id))
+        {
+            QJsonArray arrMember;
+            while(getDb.next())
+            {
+                arrMember.append(getDb.value(0).toString());
+            }
+            jsonF["arrMember"] = arrMember;
         }
     }
     else 

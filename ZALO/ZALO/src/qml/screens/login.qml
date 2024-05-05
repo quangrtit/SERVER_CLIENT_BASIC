@@ -9,7 +9,7 @@ Rectangle {
 
     Image {
         anchors.fill: parent
-        source: "qrc:/zalo/images/background-login.jpg"
+        source: "qrc:/zalo/images/background-login1.jpg"
         fillMode: Image.Stretch
     }
     ColumnLayout {

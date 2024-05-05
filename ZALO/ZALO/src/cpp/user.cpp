@@ -158,24 +158,13 @@ void User::sendListFriendForGroup(QString userphone, QVariantList arrayUserphone
     client.waitForBytesWritten();
     client.flush();
 }
-void User::getLastTextForGroup(QString userphone)
-{
-    // if(client.state() == QAbstractSocket::UnconnectedState) client.connectToHost("localhost", 1234);
-    // QJsonObject json;
-    // json["type"] = "getLastText";
-    // json["userphoneSender"] = userphone;
-    // QJsonDocument jsonDoc(json);
-    // QByteArray jsonData = jsonDoc.toJson();
-    // client.write(jsonData);
-    // client.waitForBytesWritten();
-    // client.flush();
-}
-void User::getListMemberForGroup(QString group_id)
+void User::deleteGroupChat(QString userphone, QString group_id)
 {
     if(client.state() == QAbstractSocket::UnconnectedState) client.connectToHost("localhost", 1234);
     QJsonObject json;
-    json["type"] = "getListMember";
-    json["group_id"] = group_id;
+    json["type"] = "deleteGroupChat";
+    
+    json["userphoneSender"] = userphone;
     QJsonDocument jsonDoc(json);
     QByteArray jsonData = jsonDoc.toJson();
     client.write(jsonData);

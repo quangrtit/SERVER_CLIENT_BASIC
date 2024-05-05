@@ -425,6 +425,7 @@ Rectangle {
                                         }
                                     }
                                     Rectangle {
+                                        id: rectPhoneUser
                                         width: parent.width - 2 * parent.height - 20
                                         height: parent.height - 10
                                         color: rectUser.color
@@ -452,9 +453,11 @@ Rectangle {
                                         }
                                     }
                                     Rectangle {
+                                        id: rectTimeLastText
                                         width: parent.height
-                                        height: parent.height / 4
+                                        height: parent.height / 3
                                         color: rectUser.color
+                                        y: rectPhoneUser.y
                                         Text {
                                             text: listUsers.get(index).timeLastText
                                             font.pointSize: 11
@@ -487,6 +490,35 @@ Rectangle {
                                     user.reloadRoomChat(userphonePlayer, group_now)
                                     loadRoomChat.source = "qrc:/zalo/src/qml/socicalNetwork/chatRoomUser.qml"
                                     //source: "qrc:/zalo/src/qml/socicalNetwork/chatRoomUser.qml"
+                                }
+                                Rectangle {
+                                    id: rectDots
+                                    width: rectTimeLastText.height * 1.3
+                                    height: rectTimeLastText.height
+                                    color: "#E0E0E0"
+                                    x: parent.width - width - 10
+                                    y: rectPhoneUser.y + 10
+                                    radius: 5
+                                    Image {
+                                        anchors.fill: parent
+                                        source: "qrc:/zalo/images/threeDots.png"
+                                        fillMode: Image.PreserveAspectFit
+                                        scale: 0.8
+                                    }
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        hoverEnabled: true
+                                        onEntered: {
+                                            this.cursorShape = Qt.PointingHandCursor
+                                            rectDots.color = "gray"
+                                        }
+                                        onExited: {
+                                            rectDots.color = "#E0E0E0"
+                                        }
+                                        onClicked: { 
+                                            // delete 
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -637,6 +669,7 @@ Rectangle {
             Loader {
                 id: loadRoomChat
                 anchors.fill: parent
+                
                 //source: "qrc:/zalo/src/qml/socicalNetwork/chatRoomUser.qml"
             }
             
@@ -783,8 +816,26 @@ Rectangle {
                     addNewGroup.visible = false
                 }
             }
-            
+            else if(jsonData["type"].toString() === "reloadRoomChat" && group_now === jsonData["group_id"].toString())
+            {
+                listMemberInGroup.clear();
+                var arrMember = jsonData["arrMember"];
+                for(var i = 0; i < arrMember.length; i++)
+                {
+                    listMemberInGroup.append({
+                        "code": arrMember[i].toString(),
+                        "ok": "0"
+                    })
+                }
+            }
         }
+    }
+    ListModel {
+        id: listMemberInGroup
+        // ListElement {
+        //     code: "quang "
+        //     ok: "0"
+        // }
     }
     MouseArea {
         id: addNewPhone
