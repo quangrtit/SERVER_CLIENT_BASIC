@@ -135,6 +135,7 @@ debug/qrc_qmake_resources.cpp: debug/qmake_resources.qrc \
 		images/attachFile.png \
 		images/threeDots.png \
 		src/qml/socicalNetwork/chatRoomUser.qml \
+		src/qml/component/ListFriend.qml \
 		src/qml/screens/register.qml \
 		src/qml/screens/login.qml \
 		src/qml/screens/login.qml \

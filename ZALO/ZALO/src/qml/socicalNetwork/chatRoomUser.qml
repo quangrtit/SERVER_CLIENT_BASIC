@@ -81,6 +81,7 @@ Rectangle {
                                     width: parent.height
                                     height: parent.height
                                     radius: 10
+                                    visible: listUsers.get(group_id).type === "0" ? false : true
                                     Image {
                                         width: parent.width / 1.5
                                         height: parent.height / 1.5
@@ -98,7 +99,9 @@ Rectangle {
                                             addUser.color = "white"
                                         }
                                         onClicked: {
-                                            
+                                            //console.log("click click")
+                                            user.getListFriend(userphonePlayer)
+                                            loadListFriend.source = "qrc:/zalo/src/qml/component/ListFriend.qml"
                                         }
                                     }
                                 }
@@ -484,6 +487,7 @@ Rectangle {
                     } 
                 }
             }
+            /////////////////////
             Rectangle {
                 id: rectInfomationChat
                 width: 0//rectListChat.width / 1.1
@@ -715,8 +719,10 @@ Rectangle {
                                     Component {
                                         id: memberDelegate
                                         Rectangle {
+                                            id: rectMemberDelegate
                                             width: listViewMemberInGr.width 
                                             height: 40
+                                            color: "white"
                                             // color: index % 2 === 0 ? "red" : "blue"
                                             Row {
                                                 anchors.fill: parent
@@ -727,6 +733,7 @@ Rectangle {
                                                     radius: 180
                                                     border.width: 1
                                                     border.color: "lightblue"
+                                                    // color: rectMemberDelegate.color
                                                     Image {
                                                         anchors.fill: parent
                                                         source: "qrc:/zalo/images/cloudChat.jpg"
@@ -737,11 +744,26 @@ Rectangle {
                                                 Rectangle {
                                                     width: parent.width - parent.height - 10
                                                     height: parent.height
+                                                    color: rectMemberDelegate.color
                                                     Text {
                                                         text: code 
                                                         font.pointSize: 10
                                                         anchors.verticalCenter: parent.verticalCenter
                                                     }
+                                                }
+                                            }
+                                            MouseArea {
+                                                anchors.fill: parent
+                                                hoverEnabled: true
+                                                onEntered: {
+                                                    this.cursorShape = Qt.PointingHandCursor
+                                                    parent.color = "lightgray"
+                                                }
+                                                onExited: {
+                                                    parent.color = "white"
+                                                }
+                                                onClicked: {
+                                                    
                                                 }
                                             }
                                         }
@@ -763,9 +785,49 @@ Rectangle {
                                         }
                                     }
                                 }
-
+                                Rectangle {
+                                    width: parent.width 
+                                    height: 40
+                                    visible: (listUsers.get(group_id).type === "0" || rectInfomationChat.width === 0) ? false : true
+                                    Text {
+                                        text: "Out group"
+                                        font.pointSize: 11
+                                        anchors.centerIn: parent
+                                        visible: (listUsers.get(group_id).type === "0" || rectInfomationChat.width === 0) ? false : true
+                                    }
+                                    //color: "white"
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        hoverEnabled: true
+                                        onEntered: {
+                                            this.cursorShape = Qt.PointingHandCursor
+                                            parent.color = "gray"
+                                        }
+                                        onExited: {
+                                            parent.color = "white"
+                                        }
+                                        onClicked: {
+                                            user.outGroup(userphonePlayer, group_now)
+                                        }
+                                    }
+                                    // Canvas{
+                                    //     anchors.fill: parent
+                                    //     onPaint: {
+                                    //         var ctx = getContext("2d")
+                                    //         ctx.fillStyle = "transparent"
+                                    //         ctx.fillRect(0,0,this.width ,this.height )
+                                    //         ctx.lineWidth = 4;
+                                    //         ctx.strokeStyle = "lightgray"
+                                    //         ctx.beginPath()
+                                    //         ctx.moveTo(this.width, this.height)
+                                    //         ctx.lineTo(0, this.height)
+                                    //         ctx.stroke()
+                                    //     }
+                                    // }
+                                }
                             }
                         }
+                        
                     }
                     
                 }
@@ -883,4 +945,5 @@ Rectangle {
     Component.onCompleted: {
         resolve()
     }
+    
 }

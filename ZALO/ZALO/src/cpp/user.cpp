@@ -163,8 +163,45 @@ void User::deleteGroupChat(QString userphone, QString group_id)
     if(client.state() == QAbstractSocket::UnconnectedState) client.connectToHost("localhost", 1234);
     QJsonObject json;
     json["type"] = "deleteGroupChat";
-    
     json["userphoneSender"] = userphone;
+    json["group_id"] = group_id;
+    QJsonDocument jsonDoc(json);
+    QByteArray jsonData = jsonDoc.toJson();
+    client.write(jsonData);
+    client.waitForBytesWritten();
+    client.flush();
+}
+void User::addMemberToGroupChat(QString userphone, QString group_id, QVariantList arrayUserphone)
+{
+    if(client.state() == QAbstractSocket::UnconnectedState) client.connectToHost("localhost", 1234);
+    QJsonObject json;
+    json["type"] = "addNewMembers";
+    json["userphoneSender"] = userphone;
+    json["group_id"] = group_id;
+    QJsonArray jsonArrayUserphone;
+    for(QVariant &variant : arrayUserphone)
+    {
+        if(variant.canConvert<QString>()) 
+        {
+            QString stringValue = variant.toString();
+            jsonArrayUserphone.append(stringValue);
+        }
+    }
+    //jsonArrayUserphone.append(userphone); // last check ? 
+    json["allUserphoneForGroup"] = jsonArrayUserphone;
+    QJsonDocument jsonDoc(json);
+    QByteArray jsonData = jsonDoc.toJson();
+    client.write(jsonData);
+    client.waitForBytesWritten();
+    client.flush();
+}
+void User::outGroup(QString userphone, QString group_id)
+{
+    if(client.state() == QAbstractSocket::UnconnectedState) client.connectToHost("localhost", 1234);
+    QJsonObject json;
+    json["type"] = "outGroup";
+    json["userphoneSender"] = userphone;
+    json["group_id"] = group_id;
     QJsonDocument jsonDoc(json);
     QByteArray jsonData = jsonDoc.toJson();
     client.write(jsonData);

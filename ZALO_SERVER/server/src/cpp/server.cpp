@@ -159,9 +159,47 @@ void Server::onReadData() // processing
             QJsonDocument jsonDoc1(json1);
             QByteArray jsonData = jsonDoc1.toJson();
             emit dataReceived(jsonData);
-            qDebug() << "new data is are is: " << json1;
+            // qDebug() << "new data is are is: " << json1;
         }
-        
+        else if(json["type"].toString() == "deleteGroupChat")
+        {
+            QJsonObject json1;
+            json1["sender"] = this->getClientKey(client);
+            json1["type"] = "deleteGroupChat";
+            json1["userphoneSender"] = json["userphoneSender"];
+            json1["group_id"] = json["group_id"];
+            this->deleteGroupChat(json1);
+            QJsonDocument jsonDoc1(json1);
+            QByteArray jsonData = jsonDoc1.toJson();
+            //qDebug() << "new data is are is: " << json1;
+            emit dataReceived(jsonData);
+        }
+        else if(json["type"].toString() == "addNewMembers")
+        {
+            QJsonObject json1;
+            json1["sender"] = this->getClientKey(client);
+            json1["type"] = "addNewMembers";
+            json1["userphoneSender"] = json["userphoneSender"].toString();
+            json1["allUserphoneForGroup"] = json["allUserphoneForGroup"];
+            json1["group_id"] = json["group_id"];
+            this->addMemberToGroup(json1);
+            QJsonDocument jsonDoc1(json1);
+            QByteArray jsonData = jsonDoc1.toJson();
+            emit dataReceived(jsonData);
+        }
+        else if(json["type"].toString() == "outGroup")
+        {
+            QJsonObject json1;
+            json1["sender"] = this->getClientKey(client);
+            json1["type"] = "outGroup";
+            json1["userphoneSender"] = json["userphoneSender"].toString();
+            json1["group_id"] = json["group_id"];
+            json1["deleteGroup"] = "NO";
+            this->outGroup(json1);
+            QJsonDocument jsonDoc1(json1);
+            QByteArray jsonData = jsonDoc1.toJson();
+            emit dataReceived(jsonData);
+        }
     }
 }
 void Server::onClientDisconnected()
@@ -257,6 +295,33 @@ void Server::onNewMessage(QByteArray ba)
             _clients[json["sender"].toString()]->waitForBytesWritten();
             _clients[json["sender"].toString()]->flush();
             // send result for sender about list member in one group of user send by json array
+        }
+        else if(json["type"].toString() == "deleteGroupChat")
+        {
+            for(auto &client: _clients)
+            {
+                client->write(ba);
+                client->waitForBytesWritten();
+                client->flush();
+            }
+        }
+        else if(json["type"].toString() == "addNewMembers")
+        {
+            for(auto &client: _clients)
+            {
+                client->write(ba);
+                client->waitForBytesWritten();
+                client->flush();
+            }
+        }
+        else if(json["type"].toString() == "outGroup")
+        {
+            for(auto &client: _clients)
+            {
+                client->write(ba);
+                client->waitForBytesWritten();
+                client->flush();
+            }
         }
         qDebug() << "this is json is sended : " << json;
         return;
@@ -380,42 +445,57 @@ int Server::checkGroupExist(QString userphone, QString userphoneFriend, QJsonObj
         {
             while(getDb.next())
             {
-                QSqlQuery getDb1;
-                QString checkValue = getDb.value(0).toString();
-                QString qr1 = "select count(*) from database1.users_groupx where group_id = " + getDb.value(0).toString();
-                if(getDb1.exec(qr1))
+                //QSqlQuery getDb1;
+                QString checkValue = getDb.value(0).toString(); // group_id = checkvalue
+                //QString qr1 = "select count(*) from database1.users_groupx where group_id = " + getDb.value(0).toString();
+                QString qr12 = "select count(*) from database1.groupx where (group_id = " + getDb.value(0).toString() + " and group_type = '0')";
+                QSqlQuery getDb12;
+                // check group_type ?= 0 
+                if(getDb12.exec(qr12))
                 {
-                    if(getDb1.next())
+                    if(getDb12.next())
                     {
-                        if(getDb1.value(0).toInt() == 2)
+                        if(getDb12.value(0).toInt() == 0)
                         {
-                            // kiểm tra xem friend có không group_id này không
-                            QSqlQuery getDb2;
-                            QString qr2 = "select count(*) from database1.users_groupx where group_id = " + checkValue + " and user_idphone = '" + userphoneFriend + "'"; 
-                            if(getDb2.exec(qr2))
-                            {
-                                if(getDb2.next())
-                                {
-                                    qDebug() << "error" << qr2 << " " << getDb.value(0).toInt();
-                                    if(getDb2.value(0).toInt() == 1)
-                                    {
-                                        //qDebug() << "yes sir";
-                                        jsonF["stt"] = "exist";
-                                        jsonF["group_id"] = checkValue;
-                                        jsonF["userphone"] = userphone;
-                                        jsonF["userphoneFriend"] = userphoneFriend;
-                                        jsonF["usernameFriend"] = this->getNameIndatabase(userphoneFriend);
-                                        return 0; // có tồn tại
-                                    }
-                                }
-                            }          
+
+                            continue;
                         }
                     }
-                }    
+                } 
+                // sure this is one group have 2 people
+                // if(getDb1.exec(qr1))
+                // {
+                //     if(getDb1.next())
+                //     {
+                //         if(getDb1.value(0).toInt() == 2)
+                //         {
+                            // check friend in group_id ???????
+                QSqlQuery getDb2;
+                QString qr2 = "select count(*) from database1.users_groupx where (group_id = " + checkValue + " and user_idphone = '" + userphoneFriend + "')"; 
+                if(getDb2.exec(qr2))
+                {
+                    if(getDb2.next())
+                    {
+                        qDebug() << "error" << qr2 << " " << getDb.value(0).toInt();
+                        if(getDb2.value(0).toInt() == 1)
+                        {
+                            //qDebug() << "yes sir";
+                            jsonF["stt"] = "exist";
+                            jsonF["group_id"] = checkValue;
+                            jsonF["userphone"] = userphone;
+                            jsonF["userphoneFriend"] = userphoneFriend;
+                            jsonF["usernameFriend"] = this->getNameIndatabase(userphoneFriend);
+                            return 0; // có tồn tại
+                        }
+                    }
+                }          
+                //         }
+                //     }
+                // }    
             }
             // cố gắng tạo ra thêm 1 chatgroup từ 2 người 
             QSqlQuery execQr;
-            QString qry = "insert into database1.groupx (group_name) values ('" + userphone + userphoneFriend + "')";
+            QString qry = "insert into database1.groupx (group_name, group_type) values ('" + userphone + userphoneFriend + "', '0')";
             if(execQr.exec(qry))
             {
                 qDebug() << "yeo 2";
@@ -507,6 +587,15 @@ void Server::getAllGroupChatForUser(QString userphone, QJsonObject& jsonF)
                 jsonArrayUsername.append(g.value(0).toString());
             }
             jsonF[QString::number(check)] = jsonArrayUsername;
+            // group_type
+            QSqlQuery getTypeGroup;
+            if(getTypeGroup.exec("select database1.groupx.group_type from database1.groupx where group_id = " + QString::number(check)))
+            {
+                if(getTypeGroup.next())
+                {
+                    jsonF[QString::number(check) + "type"] = getTypeGroup.value(0).toString();
+                }
+            }
         }
         jsonF["arrGroup_id"] = arrInGroup_id;
         jsonF["arrGroup_name"] = arrInGroup_name;
@@ -651,12 +740,27 @@ void Server::getListFriend(QString userphone, QJsonObject& jsonF)
             {
                 QString group_id = getDb.value(0).toString();
                 QSqlQuery countFriendDb;
-                QString qrCount = "select count(*) from database1.users_groupx where group_id = " + group_id;
+                QString qrCount = "select count(*) from database1.groupx where (group_id = " + getDb.value(0).toString() + " and group_type = '0')";
+                // QString qr12 = "select count(*) from database1.groupx where (group_id = " + getDb.value(0).toString() + " and group_type = '0')";
+                // QSqlQuery getDb12;
+                // // check group_type ?= 0 
+                // if(getDb12.exec(qr12))
+                // {
+                //     if(getDb12.next())
+                //     {
+                //         qDebug() << "using using: " << getDb12.value(0).toInt();
+                //         if(getDb12.value(0).toInt() == 0)
+                //         {
+                //             qDebug() << "using using111: " << getDb12.value(0).toInt();
+                //             continue;
+                //         }
+                //     }
+                // } 
                 countFriendDb.exec(qrCount);
                 if(countFriendDb.next())
                 {
                     int count = countFriendDb.value(0).toInt();
-                    if(count == 2)
+                    if(count == 1)
                     {
                         QSqlQuery takePhone;
                         takePhone.exec("select database1.users_groupx.user_idphone from database1.users_groupx where (group_id = " + group_id + " and user_idphone <> '" + userphone + "')");
@@ -692,6 +796,7 @@ bool Server::checkGroupExist(QJsonObject& jsonF)
             jsonF["result"] = "group must have 3 people";
             return false; // group must have 3 people
         }
+        
         for(const QJsonValue &user_idphone : arrFriend)
         {
             QSqlQuery getDb;
@@ -700,22 +805,55 @@ bool Server::checkGroupExist(QJsonObject& jsonF)
             {
                 while(getDb.next())
                 {
+                    QString qr12 = "select count(*) from database1.groupx where (group_id = " + getDb.value(0).toString() + " and group_type = '1')";
+                    QSqlQuery getDb12;
+                    // check group_type ?= 0 
+                    if(getDb12.exec(qr12))
+                    {
+                        if(getDb12.next())
+                        {
+                            if(getDb12.value(0).toInt() == 0)
+                            {
+                                continue;
+                            }
+                        }
+                    } 
                     countGroup[getDb.value(0).toString()] += 1;
                 }
             }
         }
+        // for(auto &group_id: countGroup.keys())
+        // {
+        //     qDebug() << "min database: " << group_id << " " << countGroup[group_id];
+        // }
+        // check group_type == '0' ? '1' ????
+        
         // find group_id of all user_idphone in arrFriend
         for(auto &group_id: countGroup.keys())
         {
-            if(countGroup[group_id] >= arrFriend.size())
+            if(countGroup[group_id] == arrFriend.size())
             {
+                // count member in group_id
+                QString qr11 = "select count(*) from database1.users_groupx where group_id = " + group_id;
+                QSqlQuery getDb11; 
+                if(getDb11.exec(qr11))
+                {
+                    if(getDb11.next())
+                    {
+                        if(getDb11.value(0).toInt() != arrFriend.size())
+                        {
+                            continue;
+                        }
+                    }
+                }
                 qDebug() << "go database: " << group_id << " " << countGroup[group_id] << " ";
+                jsonF["result"] = "group was exist";
                 return false;
             }
         }
         // if group in database is not exist => create group in database
         QSqlQuery getDb;
-        QString qr = "insert into database1.groupx (group_name) values ('" + jsonF["groupName"].toString() +"')";    
+        QString qr = "insert into database1.groupx (group_name, group_type, group_owner) values ('" + jsonF["groupName"].toString() + "', '1', " + "'" + jsonF["userphoneSender"].toString() + "')";    
         if(getDb.exec(qr))
         {
             if(getDb.exec("SELECT database1.groupx.group_id FROM database1.groupx ORDER BY group_id DESC LIMIT 1;"))
@@ -780,6 +918,132 @@ void Server::getMemberInGroup(QJsonObject& jsonF)
     {
         jsonF["result"] = "get member not success";
         qDebug() << "connect member not success";
+    }
+}
+void Server::deleteGroupChat(QJsonObject& jsonF)
+{
+    QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
+    db.setHostName("localhost");
+    db.setPort(5432);
+    db.setDatabaseName("networking");
+    db.setUserName("postgres");
+    db.setPassword("123456");
+    
+    if(db.open())
+    {
+        // check owner 
+        QSqlQuery deleteDb;
+        QString qr1 = "delete from database1.chathistory where group_id = " + jsonF["group_id"].toString();
+        if(deleteDb.exec(qr1))
+        {
+            qDebug() << "delete history chat is success";
+        }
+        QString qr2 = "delete from database1.users_groupx where group_id = " + jsonF["group_id"].toString();
+        if(deleteDb.exec(qr2))
+        {
+            qDebug() << "delete users_groupx is success";
+        }
+        QString qr3 = "delete from database1.groupx where group_id = " + jsonF["group_id"].toString();
+        if(deleteDb.exec(qr3))
+        {
+            qDebug() << "delete groupx is success";
+        }
+        jsonF["result"] = "delete success";
+    }
+    else 
+    {
+        jsonF["result"] = "delete not success";
+        qDebug() << "delete group not success";
+    }
+}
+void Server::addMemberToGroup(QJsonObject& jsonF)
+{
+    QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
+    db.setHostName("localhost");
+    db.setPort(5432);
+    db.setDatabaseName("networking");
+    db.setUserName("postgres");
+    db.setPassword("123456");
+    
+    if(db.open())
+    {
+        // check owner ? 
+        QJsonArray arrFriend = jsonF["allUserphoneForGroup"].toArray();
+        for(const QJsonValue &user_idphone : arrFriend)
+        {
+            bool checkUserPhoneInGroup = false;
+            QSqlQuery getDb;
+            QString qr = "select database1.users_groupx.group_id from database1.users_groupx where user_idphone = '" + user_idphone.toString() + "'";
+            if(getDb.exec(qr))
+            {
+                while(getDb.next())
+                {
+                    if(getDb.value(0).toString() == jsonF["group_id"].toString())
+                    {
+                        checkUserPhoneInGroup = true;
+                        break;
+                    }   
+                }
+                if(!checkUserPhoneInGroup)
+                {
+                    QSqlQuery insertData;
+                    if(insertData.exec("insert into database1.users_groupx values (" + jsonF["group_id"].toString() + ", '" + user_idphone.toString() + "')"))
+                    {
+                        jsonF["result"] = "success";
+                        qDebug() << "yes yes insert new member success";
+                    }
+                    else 
+                    {
+                        jsonF["result"] = "success";
+                    }
+                }
+            }
+        }
+    }
+    else 
+    {
+        jsonF["result"] = "add member not success";
+        qDebug() << "add member to group not success";
+    }
+}
+void Server::outGroup(QJsonObject& jsonF)
+{
+    QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
+    db.setHostName("localhost");
+    db.setPort(5432);
+    db.setDatabaseName("networking");
+    db.setUserName("postgres");
+    db.setPassword("123456");
+    
+    if(db.open())
+    {
+        // check owner 
+        QString qr = "delete from database1.users_groupx where (user_idphone = '" + jsonF["userphoneSender"].toString() + "' and group_id = " + jsonF["group_id"].toString() + ")";
+        QSqlQuery getDb;
+        if(getDb.exec(qr))
+        {
+            // check amount member in group if amount == 0 ? delete group
+            QSqlQuery checkAmountMember;
+            if(checkAmountMember.exec("SELECT COUNT(*) FROM database1.users_groupx WHERE group_id = " + jsonF["group_id"].toString()))
+            {
+                if(checkAmountMember.value(0).toInt() == 0)
+                {
+                    jsonF["deleteGroup"] = "YES";
+                    QSqlQuery checkDeleteGroup;
+                    checkDeleteGroup.exec("delete from database1.groupx where group_id = " + jsonF["group_id"].toString());
+                }
+            }
+            jsonF["result"] = jsonF["userphoneSender"].toString() + " out success";
+        }
+        else 
+        {
+            jsonF["result"] = jsonF["userphoneSender"].toString() + " out not success";
+        }
+    }
+    else 
+    {
+        jsonF["result"] = jsonF["userphoneSender"].toString() + " out not success";
+        qDebug() << "out group not success";
     }
 }
 QString Server::getClientKey(QTcpSocket *client)

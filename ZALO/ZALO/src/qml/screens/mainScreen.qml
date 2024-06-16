@@ -3,7 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Controls.Basic
 import Qt5Compat.GraphicalEffects
-
+// import "qrc:/zalo/src/qml/component"
 
 
 Rectangle {
@@ -13,8 +13,10 @@ Rectangle {
     property var nameGroup: "not know" 
     property var st: 1
     property var takeIndex: -1
+    
     Row {
         anchors.fill: parent
+        // Component.onCompleted: {console.log(cocaiconcak.width)}
         Rectangle {
             id: rectTitle
             width: parent.width / 24
@@ -487,6 +489,7 @@ Rectangle {
                                     listUsers.setProperty(index, "colors", "#000099");
                                     group_now = listUsers.get(index).id
                                     nameGroup = listUsers.get(index).name
+                                    group_id = index
                                     user.reloadRoomChat(userphonePlayer, group_now)
                                     loadRoomChat.source = "qrc:/zalo/src/qml/socicalNetwork/chatRoomUser.qml"
                                     //source: "qrc:/zalo/src/qml/socicalNetwork/chatRoomUser.qml"
@@ -517,6 +520,16 @@ Rectangle {
                                         }
                                         onClicked: { 
                                             // delete 
+                                            user.deleteGroupChat(userphonePlayer, listUsers.get(index).id)
+                                            // console.log("new database: ", listUsers.get(index).id)
+                                            // if(group_now != "") 
+                                            // {
+                                            //     user.deleteGroupChat(userphonePlayer, group_now)
+                                            // }
+                                            // else 
+                                            // {
+                                                
+                                            // }
                                         }
                                     }
                                 }
@@ -727,6 +740,7 @@ Rectangle {
                 if(userphonePlayer == jsonData["userphone"].toString())
                 {
                     listUsers.append({
+                        "type": "0",
                         "id": jsonData["group_id"].toString(),
                         "code": jsonData["userphoneFriend"].toString(),
                         "name": jsonData["userphoneFriend"].toString(),
@@ -738,6 +752,7 @@ Rectangle {
                 else if(userphonePlayer == jsonData["userphoneFriend"].toString())
                 {
                     listUsers.append({
+                        "type": "0",
                         "id": jsonData["group_id"].toString(),
                         "code": jsonData["userphone"].toString(),
                         "name": jsonData["userphone"].toString(),
@@ -750,11 +765,13 @@ Rectangle {
             }
             else if(type === "startChat")
             {
-                var arrGroupReceived = jsonData["arrGroup_id"];
+                loadRoomChat.source = ""
+                listUsers.clear()
+                var arrGroupReceived = jsonData["arrGroup_id"]
                 var arrGroupNameReceived = jsonData["arrGroup_name"]
                 for(var i = 0; i < arrGroupReceived.length; i++)
                 {
-                    if(jsonData[arrGroupReceived[i].toString()].length == 2)
+                    if(jsonData[arrGroupReceived[i].toString() + "type"].toString() === "0")//jsonData[arrGroupReceived[i].toString()].length == 2
                     {
                         var nameFriend = "";
                         var checky = jsonData[arrGroupReceived[i].toString()]
@@ -766,6 +783,7 @@ Rectangle {
                             }
                         }
                         listUsers.append({
+                            "type": jsonData[arrGroupReceived[i].toString() + "type"].toString(),
                             "id": arrGroupReceived[i].toString(),
                             "code": nameFriend,
                             "name": nameFriend,
@@ -777,6 +795,7 @@ Rectangle {
                     else 
                     {
                         listUsers.append({
+                            "type": jsonData[arrGroupReceived[i].toString() + "type"].toString(),
                             "id": arrGroupReceived[i].toString(),
                             "code": arrGroupNameReceived[i].toString(),
                             "name": arrGroupNameReceived[i].toString(),
@@ -806,6 +825,7 @@ Rectangle {
                 if(!checkPersonInGroup(arr) && jsonData["result"] === "create group success")
                 {
                     listUsers.append({
+                        "type": "1",
                         "id": jsonData["group_id"].toString(),
                         "code": jsonData["groupName"].toString(),
                         "name": jsonData["groupName"].toString(),
@@ -827,6 +847,19 @@ Rectangle {
                         "ok": "0"
                     })
                 }
+            }
+            else if(jsonData["type"].toString() === "deleteGroupChat")
+            {
+                user.sendInfoStartRoomChat(userphonePlayer)
+            }
+            else if(jsonData["type"].toString() == "addNewMembers")
+            {
+                user.reloadRoomChat(userphonePlayer, group_now)
+            }
+            else if(jsonData["type"].toString() == "outGroup")
+            {
+                user.sendInfoStartRoomChat(userphonePlayer)
+                //user.reloadRoomChat(userphonePlayer, group_now)
             }
         }
     }
@@ -1387,5 +1420,9 @@ Rectangle {
             user.sendInfoStartRoomChat(userphonePlayer)
             st++;
         }
+    }
+    Loader {
+        id: loadListFriend
+        anchors.fill: parent
     }
 }

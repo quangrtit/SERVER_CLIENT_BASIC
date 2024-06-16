@@ -40,6 +40,11 @@ public:
 
     bool checkGroupExist(QJsonObject& jsonF); // check one group have 3 people are exist ? 
     void getMemberInGroup(QJsonObject& jsonF);
+
+    void deleteGroupChat(QJsonObject& jsonF);
+    void addMemberToGroup(QJsonObject& jsonF);
+
+    void outGroup(QJsonObject& jsonF);
 private:
     QTcpServer server;
     QHash<QString, QTcpSocket*> _clients;// list save all clients

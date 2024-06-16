@@ -31,14 +31,14 @@ Rectangle {
                     text: "Welcome !"
                     font.pixelSize: 35
                     font.bold: true
-                    color: "black"
+                    color: "white"
                 }
                 Text {
                     id: textTime
                     anchors.horizontalCenter: parent.horizontalCenter
                     font.pointSize: 35
                     font.weight: Font.DemiBold
-                    color: "black"
+                    color: "white"
                     textFormat: Text.RichText
                     function set() {
                         textTime.text = "<span>"+Qt.formatDateTime(new Date(), 'hh:mm')+"</span>"+"<span style='font-size: 20px;'>"+Qt.formatDateTime(new Date(), ':ss')+"</span>"
@@ -57,7 +57,7 @@ Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
                     font.pointSize: 12                    
                     textFormat: Text.RichText
-                    color: "black"
+                    color: "white"
                     function set() {
                         dateTextTime.text = Qt.formatDateTime(new Date(), 'ddd, dd-MM-yyyy')
                     }
@@ -91,7 +91,7 @@ Rectangle {
                         Layout.preferredWidth: 1
                         text: "Username"
                         font.pixelSize: 18
-                        color: "black"
+                        color: "white"
                         verticalAlignment: Text.AlignVCenter
                         leftPadding: 15
                     }
@@ -102,7 +102,7 @@ Rectangle {
                         color: "transparent"
                         border {
                             width: 1
-                            color: "black"
+                            color: "white"
                         }
                         radius: 10
                         RowLayout {
@@ -121,10 +121,10 @@ Rectangle {
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
                                 placeholderText: "Fill username"
-                                placeholderTextColor: "black"                                
+                                placeholderTextColor: "white"                                
                                 font.pixelSize: 15
                                 text: "0359899632"
-                                color: "black"
+                                color: "white"
                                 
                                 background: Rectangle {
                                     anchors.fill: parent
@@ -156,7 +156,7 @@ Rectangle {
                         Layout.preferredWidth: 1
                         text: "Password"
                         font.pixelSize: 18
-                        color: "black"
+                        color: "white"
                         verticalAlignment: Text.AlignVCenter
                         leftPadding: 15
                     }
@@ -167,7 +167,7 @@ Rectangle {
                         color: "transparent"
                         border {
                             width: 1
-                            color: "black"
+                            color: "white"
                         }
                         radius: 10
                         RowLayout {
@@ -184,9 +184,9 @@ Rectangle {
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
                                 placeholderText: "Fill password"
-                                placeholderTextColor: "black"                                
+                                placeholderTextColor: "white"                                
                                 font.pixelSize: 15
-                                color: "black"
+                                color: "white"
                                 text: "123456"
                                 echoMode: TextInput.Password
                                 background: Rectangle {
@@ -233,7 +233,7 @@ Rectangle {
                             Component.onCompleted: {
                                 indicator.children[0].width = 15;
                                 indicator.children[0].height = 15;
-                                contentItem.color =  "black"
+                                contentItem.color =  "white"
                             }
                             onClicked: {
                                 if(checked) {
@@ -303,7 +303,7 @@ Rectangle {
                                     verticalAlignment: Text.AlignVCenter
                                     font.pixelSize: 18
                                     font.bold: true
-                                    color: "black"
+                                    color: "white"
                                 }
                                 Connections {
                                     target: user
@@ -359,7 +359,7 @@ Rectangle {
                                     verticalAlignment: Text.AlignVCenter
                                     font.pixelSize: 18
                                     font.bold: true
-                                    color: "black"
+                                    color: "white"
                                 }
                                 Connections {
                                     target: user

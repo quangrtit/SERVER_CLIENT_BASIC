@@ -6,13 +6,17 @@ import Qt5Compat.GraphicalEffects
 import user
 Window {
     id: root
-    width: 1000
-    height: 1500 / 2
-    //visibility: Qt.WindowFullScreen
+    // width: 1000
+    // height: 1500 / 2
+    Component.onCompleted: {
+        console.log(root.width, " ", root.height)
+    }
+    visibility: Qt.WindowFullScreen
     visible: true
     title: qsTr("ZALO CỦA QUẢNG")
     property var userphonePlayer: ""
     property var group_now: "" //  id group onclick
+    property var group_id: 0
     MyUser {
         id: user
     }

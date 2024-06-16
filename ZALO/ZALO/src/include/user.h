@@ -24,7 +24,11 @@ public:
     Q_INVOKABLE void getListFriend(QString userphone);
     Q_INVOKABLE void sendListFriendForGroup(QString userphone, QVariantList arrayUserphone, QString groupName);
 
-    Q_INVOKABLE void deleteMemberInGroupChat(QString userphone, QString group_id); // remover friend 
+    Q_INVOKABLE void deleteGroupChat(QString userphone, QString group_id); // remover friend 
+
+    Q_INVOKABLE void addMemberToGroupChat(QString userphone, QString group_id, QVariantList arrayUserphone); // add new members
+
+    Q_INVOKABLE void outGroup(QString userphone, QString group_id);// out group
 
 signals:
     void dataReceived(QString data);
